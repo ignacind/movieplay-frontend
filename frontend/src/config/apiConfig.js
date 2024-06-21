@@ -42,7 +42,8 @@ const endpoints = {
   movie: {
     getMoviesForHomepage: () => `${API_VERSION}/movies/`,
     getMovieById: movieId => `${API_VERSION}/movies/${movieId}`,
-    searchMovies: (input, sort, orderBy) => `${API_VERSION}/movies/search?input=${input}&page=0&size=30&sort=${sort}&orderBy=${orderBy}`,
+    searchMovies: (input, page, size, sort, orderBy) =>
+      `${API_VERSION}/movies/search?input=${input}&page=${page}&size=${size}&sort=${sort}&orderBy=${orderBy}`,
     getNewReleases: () => `${API_VERSION}/movies/new`,
     rateMovie: (movieId, userId) => `${API_VERSION}/movies/${movieId}/rate/${userId}`,
   },

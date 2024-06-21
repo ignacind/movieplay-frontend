@@ -1,7 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Text,
-  Image,
   StyleSheet,
   TextInput,
   TouchableOpacity,
@@ -9,31 +8,31 @@ import {
 } from 'react-native';
 import { View } from 'react-native';
 import SearchIcon from '../../assets/images/search_btn_black.svg';
-import SearchIconWhite from '../../assets/images/search_btn.svg';
+import FilterIcon from '../../assets/images/filter_btn.svg';
 
 import MovieCard from '../../components/MovieCard';
 import movieService from '../../services/moviesService';
 import LoadingPage from '../../components/LoadingPage';
-import FilterIcon from '../../assets/images/filter_btn.svg';
+import FilterPopup from './FilterPopUp';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
-import FilterPopup from './FilterPopUp';
-
 export default function Search({ navigation }) {
   const [searchInput, setSearchInput] = useState('');
-  const [movieData, setMovieData] = useState({});
+  const [movieData, setMovieData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isFilterPopupVisible, setIsFilterPopupVisible] = useState(false);
   const [orderByMethod, setOrderByMethod] = useState('');
   const [selectedGenres, setSelectedGenres] = useState([]);
   const [selectedOrderASC, setSelectedOrderASC] = useState(true);
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
 
   const inputRef = useRef();
 
-  React.useEffect(() => {
+  useEffect(() => {
     navigation.setOptions({
       headerTitle: () => (
         <View style={styles.headerContainer}>
@@ -47,9 +46,8 @@ export default function Search({ navigation }) {
           <View style={styles.inputContainer}>
             <TextInput
               ref={inputRef}
-              onChangeText={text => (inputRef.text = text)}
+              onChangeText={text => setSearchInput(text)}
               style={styles.inputText}
-              defaultValue={searchInput}
               placeholder="Buscar Película o Actor"
               onSubmitEditing={() => handleSearch()}
               placeholderTextColor={'#303030'}
@@ -65,87 +63,66 @@ export default function Search({ navigation }) {
         </TouchableOpacity>
       ),
     });
-  });
+  }, [searchInput, isFilterPopupVisible]);
 
   const filterGenres = (movies, selectedGenres) => {
-    const filteredMovies = { movies: [] };
-    if (selectedGenres.length === 0 || movies === undefined) {
-      movies.map(movie => {
-        filteredMovies.movies.push(movie);
-
-      });
-      return filteredMovies;
+    if (selectedGenres.length === 0) {
+      return movies;
     }
-
-    movies.filter(movie => {
-      for (let i = 0; i < movie.genres.length; i++) {
-        if (
-          selectedGenres.includes(movie.genres[i].name) &&
-          !filteredMovies.movies.includes(movie)
-        ) {
-          filteredMovies.movies.push(movie);
-        }
-      }
-      return false;
-    });
-
-
-
-    return filteredMovies;
+    return movies.filter(movie =>
+      movie.genres.some(genre => selectedGenres.includes(genre.name))
+    );
   };
 
-  const handleSearch = async () => {
-
-    let textInputValue = inputRef.text;
-    if (textInputValue === undefined || textInputValue.trim().length === 0) {
+  const handleSearch = async (newSearch = true) => {
+    let textInputValue = searchInput;
+    if (!textInputValue.trim().length) {
       return;
     }
 
-    if (orderByMethod != 'RATING' && orderByMethod != 'DATE') {
-
-      orderBy = 'DATE';
-    } else {
-      orderBy = orderByMethod;
-    }
-
+    const orderBy = orderByMethod || 'DATE';
 
     setIsLoading(true);
     const response = await movieService.searchMovies(
       textInputValue.trimStart(),
       selectedOrderASC ? 'ASC' : 'DESC',
       orderBy,
+      newSearch ? 0 : page,
+      15
     );
 
-    movieSet = filterGenres(response.movies, selectedGenres);
-
-    setMovieData(movieSet);
+    const filteredMovies = filterGenres(response.movies, selectedGenres);
+    setMovieData(newSearch ? filteredMovies : [...movieData, ...filteredMovies]);
+    setPage(newSearch ? 1 : page + 1);
+    setHasMore(response.movies.length > 0);
     setIsLoading(false);
   };
 
   const applyFilters = () => {
-    handleSearch();
+    handleSearch(true);
   };
 
-  const SearchView = () => {
-    return (
-      <View style={styles.container}>
-        <FlatList
-          data={movieData.movies}
-          renderItem={({ item }) => <MovieCard movie={item} />}
-          keyExtractor={item => item.movieId}
-        />
-      </View>
-    );
+  const handleLoadMore = () => {
+    if (!isLoading && hasMore) {
+      handleSearch(false);
+    }
   };
 
   return (
     <View style={styles.container}>
-      {isLoading ? (
+      {isLoading && page === 0 ? (
         <LoadingPage />
-      ) : movieData.movies !== undefined && movieData.movies.length > 0 ? (
-        <SearchView />
-      ) : inputRef.text && inputRef.text.length > 0 ? (
-        <RenderNoResults textSearched={inputRef.text} />
+      ) : movieData.length > 0 ? (
+        <FlatList
+          data={movieData}
+          renderItem={({ item }) => <MovieCard movie={item} />}
+          keyExtractor={item => item.movieId}
+          onEndReached={handleLoadMore}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={isLoading ? <LoadingPage /> : null}
+        />
+      ) : searchInput ? (
+        <RenderNoResults textSearched={searchInput} />
       ) : (
         <RenderNoSearch />
       )}
@@ -171,7 +148,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#03152D',
   },
-
   headerContainer: {
     width: wp('64%'),
     height: hp('5.2%'),
@@ -191,11 +167,9 @@ const styles = StyleSheet.create({
     fontSize: hp('2%'),
     color: '#000',
   },
-
   filterBtn: {
     marginRight: wp('1.5%'),
   },
-
   noSearchContainer: {
     flex: 1,
     alignItems: 'center',
@@ -207,14 +181,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     paddingBottom: 25,
   },
-
   noResultsContainer: {
     flex: 1,
     alignItems: 'center',
     marginHorizontal: wp('10%'),
     justifyContent: 'center',
   },
-
   noResultsText: {
     color: '#FAFAFA',
     fontSize: hp('2.5%'),
@@ -226,7 +198,7 @@ const RenderNoSearch = () => {
   return (
     <View style={styles.noSearchContainer}>
       <Text style={styles.noSearchText}>Hoy estoy pensando en buscar...</Text>
-      <SearchIconWhite width={130} height={130} />
+      <SearchIcon width={130} height={130} />
     </View>
   );
 };

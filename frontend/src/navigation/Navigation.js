@@ -3,10 +3,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { View, StyleSheet, Pressable } from 'react-native';
 import { getTokens, getUserId } from '../services/storageService';
-import { login } from '../redux/slices/authSlice';
+import { login, logout } from '../redux/slices/authSlice';
 import ErrorScreen from '../screens/ErrorScreen';
 import LoadingPage from '../components/LoadingPage';
-import { setUserId } from '../redux/slices/userSlice';
+import { clearUserId, setUserId } from '../redux/slices/userSlice';
 import { AuthStack, MainStack } from './Stack';
 
 
@@ -15,17 +15,21 @@ const Navigation = () => {
   const error = useSelector(state => state.error.error);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    const checkTokens = async () => {
-      const { accessToken, refreshToken } = await getTokens();
-      if (accessToken && refreshToken) {
-        dispatch(login({ accessToken, refreshToken }));
-        dispatch(setUserId(await getUserId()));
-      }
-    };
+  // useEffect(() => {
+  //   const checkTokens = async () => {
+  //     const { accessToken, refreshToken } = await getTokens();
+  //     const userId = await getUserId();
+  //     if (accessToken && refreshToken && userId) {
+  //       dispatch(login({ accessToken: accessToken, refreshToken: refreshToken, isAuthenticated: true}));
+  //       dispatch(setUserId(userId));
+  //     } else {
+  //       dispatch(logout());
+  //       dispatch(clearUserId());
+  //     }
+  //   };
 
-    checkTokens();
-  }, [dispatch]);
+  //   checkTokens();
+  // }, [dispatch]);
 
   if (isAuthenticated === undefined) {
     return (

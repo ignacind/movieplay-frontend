@@ -31,6 +31,8 @@ export default function Home({ }) {
   }, []);
 
   const CarouselItem = items => (
+
+
     <View style={styles.carouselItemContainer}>
       <Image
         source={{ uri: items.image }}
@@ -50,6 +52,8 @@ export default function Home({ }) {
   );
 
   const BigMovieCarousel = () => {
+    if (movieData === undefined || movieData.bigMovies === undefined) return <LoadingPage />;
+
     return (
       <ScrollView style={styles.fullHomeContainer}>
         <View style={styles.carouselContainer}>

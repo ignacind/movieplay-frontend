@@ -22,7 +22,7 @@ const responseInterceptor = async error => {
     try {
       const state = store.getState();
       const refreshToken = state.auth.refreshToken;
-      const userId = state.user.userData.userId;
+      const userId = state.user.userId;
       const oldAccessToken = state.auth.accessToken;
 
       if (!userId || !oldAccessToken || !refreshToken) {

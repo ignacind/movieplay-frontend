@@ -37,16 +37,15 @@ const SearchMovieCard = React.memo(({ movie }) => {
   }
   
   const handlePosterPress = () => {
-    console.log("NAVIGATING TO MOVIE DETAILS")
     navigation.navigate('MovieDetails', { movie });
   };
 
   return (
     <View style={styles.container}>
       
-      <Pressable onPress={handlePosterPress}>
-      <View 
-      style={styles.poster.container}>
+      <Pressable // Navigate to MovieDetails
+      style={styles.poster.container} 
+      onPress={handlePosterPress}>
 
         <Image
           source={{ uri: movie.posterImageLink }}
@@ -55,7 +54,6 @@ const SearchMovieCard = React.memo(({ movie }) => {
           resizeMode="cover"
         />
 
-      </View>
       </Pressable>
 
       <View style={styles.body.container}>

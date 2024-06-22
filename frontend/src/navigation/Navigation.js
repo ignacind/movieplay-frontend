@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { View, StyleSheet, Pressable } from 'react-native';
 import { getTokens, getUserId } from '../services/storageService';
 import { login, logout } from '../redux/slices/authSlice';
-import ErrorScreen from '../screens/ErrorScreen';
+import ErrorScreen from '../screens/Error/ErrorScreen';
 import LoadingPage from '../components/LoadingPage';
 import { clearUserId, setUserId } from '../redux/slices/userSlice';
 import { AuthStack, MainStack } from './Stack';

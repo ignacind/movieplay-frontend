@@ -4,11 +4,11 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import FavoriteMovie_false from '../assets/images/favoriteMovie_false.svg';
-import FavoriteMovie_true from '../assets/images/favoriteMovie_true.svg';
-import RatingStar from '../assets/images/ratingStar.svg';
+import FavoriteMovie_false from '../../assets/images/favoriteMovie_false.svg';
+import FavoriteMovie_true from '../../assets/images/favoriteMovie_true.svg';
+import RatingStar from '../../assets/images/ratingStar.svg';
 
-const MovieCard = React.memo(({ movie }) => {
+const SearchMovieCard = React.memo(({ movie }) => {
   const [isFavorite, setIsFavorite] = React.useState(false);
 
   const genresList = movie.genres.map(genre => {
@@ -153,4 +153,4 @@ const GenreCard = ({ genre }) => {
   );
 };
 
-export default MovieCard;
+export default SearchMovieCard;

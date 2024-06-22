@@ -1,20 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
   Text,
-  TextInput,
   TouchableOpacity,
   FlatList,
 } from 'react-native';
 import { View } from 'react-native';
-import SearchIcon from '../../assets/images/search_btn_black.svg';
 import SearchIconWhite from '../../assets/images/search_btn.svg';
 import FilterIcon from '../../assets/images/filter_btn.svg';
 
 import SearchHeader from './Search.header';
-import MovieCard from '../../components/MovieCard';
+import SearchMovieCard from './Search.movieCard';
 import movieService from '../../services/moviesService';
 import LoadingPage from '../../components/LoadingPage';
-import FilterPopup from './FilterPopUp';
+import FilterPopup from './Search.filterPopUp';
 
 import { styles } from './Search.styles';
 
@@ -113,7 +111,7 @@ export default function Search({ navigation }) {
       ) : movieData.length > 0 ? (
         <FlatList
           data={movieData}
-          renderItem={({ item }) => <MovieCard movie={item} />}
+          renderItem={({ item }) => <SearchMovieCard movie={item} />}
           keyExtractor={item => item.movieId}
           onEndReached={handleLoadMore}
           onEndReachedThreshold={0.5}

@@ -3,8 +3,8 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useDispatch, useSelector } from 'react-redux';
-import { hideError } from '../redux/slices/errorSlice';
-import { retryRequest } from '../redux/thunks/retryThunk';
+import { hideError } from '../../redux/slices/errorSlice';
+import { retryRequest } from '../../redux/thunks/retryThunk';
 
 const ErrorScreen = ({ message, onRetry, iconName }) => {
   const dispatch = useDispatch();

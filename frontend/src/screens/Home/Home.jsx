@@ -75,9 +75,13 @@ export default function Home({ }) {
     );
   };
 
+  if (isLoading) {
+    return <LoadingPage />;
+  }
+
   return (
     <View style={styles.defaultContainer}>
-      {isLoading ? <LoadingPage /> : <BigMovieCarousel />}
+      <BigMovieCarousel />
     </View>
   );
 }

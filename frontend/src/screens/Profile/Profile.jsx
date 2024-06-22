@@ -3,8 +3,8 @@ import { Text, View, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { useDispatch, useSelector } from 'react-redux';
 import ModalAccount from './Modal/ModalAccount';
-import ProfilePicture from './ProfilePicture';
-import ProfileNickName from './ProfileNickName';
+import ProfilePicture from './Profile.picture';
+import ProfileNickName from './Profile.nickname';
 import LoadingPage from '../../components/LoadingPage';
 import userService from '../../services/userService';
 

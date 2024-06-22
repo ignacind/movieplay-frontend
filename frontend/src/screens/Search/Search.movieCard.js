@@ -7,10 +7,16 @@ import {
 import FavoriteMovie_false from '../../assets/images/favoriteMovie_false.svg';
 import FavoriteMovie_true from '../../assets/images/favoriteMovie_true.svg';
 import RatingStar from '../../assets/images/ratingStar.svg';
+import { useNavigation } from '@react-navigation/native';
+
+
 
 const SearchMovieCard = React.memo(({ movie }) => {
-  const [isFavorite, setIsFavorite] = React.useState(false);
 
+  const navigation = useNavigation();
+
+  const [isFavorite, setIsFavorite] = React.useState(false);
+  
   const genresList = movie.genres.map(genre => {
     return <GenreCard genre={genre.name} key={genre.genreId} />;
   });
@@ -29,17 +35,28 @@ const SearchMovieCard = React.memo(({ movie }) => {
       />,
     );
   }
+  
+  const handlePosterPress = () => {
+    console.log("NAVIGATING TO MOVIE DETAILS")
+    navigation.navigate('MovieDetails', { movie });
+  };
 
   return (
     <View style={styles.container}>
-      <View style={styles.poster.container}>
+      
+      <Pressable onPress={handlePosterPress}>
+      <View 
+      style={styles.poster.container}>
+
         <Image
           source={{ uri: movie.posterImageLink }}
           alt={movie.title}
           style={styles.poster.image}
           resizeMode="cover"
         />
+
       </View>
+      </Pressable>
 
       <View style={styles.body.container}>
         <Text style={styles.body.title}>{movie.title}</Text>

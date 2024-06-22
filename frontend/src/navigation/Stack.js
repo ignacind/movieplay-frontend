@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Search from '../screens/Search/Search';
 import Login from '../screens/Login/Login';
+import MovieDetails from '../screens/Movie/MovieDetails';
 import { TabGroup } from './TabGroup';
 
 const Stack = createNativeStackNavigator();
@@ -32,6 +33,23 @@ export const MainStack = () => {
           headerTintColor: '#FAFAFA',
         }}
       />
+      <Stack.Screen
+        name="MovieDetails"
+        component={MovieDetails}
+        options={{
+          headerTitle: '',
+          headerTitleStyle: {
+            color: '#FAFAFA',
+            fontSize: hp('2.75%'),
+            weight: 'medium',
+            letterSpacing: 2,
+          },
+          headerStyle: {
+            backgroundColor: '#192941',
+          },
+          headerTintColor: '#FAFAFA',
+        }}
+        />
     </Stack.Navigator>
   );
 };

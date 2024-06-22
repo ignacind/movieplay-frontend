@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, Image, StyleSheet, Pressable} from 'react-native';
+import { View, Text, Image, StyleSheet, Pressable } from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -8,7 +8,7 @@ import FavoriteMovie_false from '../assets/images/favoriteMovie_false.svg';
 import FavoriteMovie_true from '../assets/images/favoriteMovie_true.svg';
 import RatingStar from '../assets/images/ratingStar.svg';
 
-export default function MovieCard({movie}) {
+const MovieCard = React.memo(({ movie }) => {
   const [isFavorite, setIsFavorite] = React.useState(false);
 
   const genresList = movie.genres.map(genre => {
@@ -34,7 +34,7 @@ export default function MovieCard({movie}) {
     <View style={styles.container}>
       <View style={styles.poster.container}>
         <Image
-          source={{uri: movie.posterImageLink}}
+          source={{ uri: movie.posterImageLink }}
           alt={movie.title}
           style={styles.poster.image}
           resizeMode="cover"
@@ -62,7 +62,8 @@ export default function MovieCard({movie}) {
       </View>
     </View>
   );
-}
+});
+
 
 const styles = StyleSheet.create({
   container: {
@@ -144,10 +145,12 @@ const styles = StyleSheet.create({
   },
 });
 
-const GenreCard = ({genre}) => {
+const GenreCard = ({ genre }) => {
   return (
     <View style={styles.body.genre.container}>
       <Text style={styles.body.genre.text}>{genre}</Text>
     </View>
   );
 };
+
+export default MovieCard;

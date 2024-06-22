@@ -1,23 +1,22 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
   Text,
-  StyleSheet,
   TextInput,
   TouchableOpacity,
   FlatList,
 } from 'react-native';
 import { View } from 'react-native';
 import SearchIcon from '../../assets/images/search_btn_black.svg';
+import SearchIconWhite from '../../assets/images/search_btn.svg';
 import FilterIcon from '../../assets/images/filter_btn.svg';
 
+import SearchHeader from './Search.header';
 import MovieCard from '../../components/MovieCard';
 import movieService from '../../services/moviesService';
 import LoadingPage from '../../components/LoadingPage';
 import FilterPopup from './FilterPopUp';
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from 'react-native-responsive-screen';
+
+import { styles } from './Search.styles';
 
 export default function Search({ navigation }) {
   const [searchInput, setSearchInput] = useState('');
@@ -29,31 +28,20 @@ export default function Search({ navigation }) {
   const [selectedOrderASC, setSelectedOrderASC] = useState(true);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
+  const [searchAttempted, setSearchAttempted] = useState(false);
 
+  const amountOfMoviesToGet = 8;
   const inputRef = useRef();
 
   useEffect(() => {
     navigation.setOptions({
       headerTitle: () => (
-        <View style={styles.headerContainer}>
-          <View style={styles.searchIcon}>
-            <TouchableOpacity
-              style={styles.searchIcon.btn}
-              onPress={() => handleSearch()}>
-              <SearchIcon width={28} height={28} />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.inputContainer}>
-            <TextInput
-              ref={inputRef}
-              onChangeText={text => setSearchInput(text)}
-              style={styles.inputText}
-              placeholder="Buscar Película o Actor"
-              onSubmitEditing={() => handleSearch()}
-              placeholderTextColor={'#303030'}
-            />
-          </View>
-        </View>
+        <SearchHeader
+          inputRef={inputRef}
+          searchInput={searchInput}
+          setSearchInput={setSearchInput}
+          handleSearch={handleSearch}
+        />
       ),
       headerRight: () => (
         <TouchableOpacity
@@ -76,25 +64,35 @@ export default function Search({ navigation }) {
 
   const handleSearch = async (newSearch = true) => {
     let textInputValue = searchInput;
-    if (!textInputValue.trim().length) {
+    if (textInputValue === '' || textInputValue.trim().length === 0) {
       return;
     }
 
     const orderBy = orderByMethod || 'DATE';
 
     setIsLoading(true);
-    const response = await movieService.searchMovies(
-      textInputValue.trimStart(),
-      selectedOrderASC ? 'ASC' : 'DESC',
-      orderBy,
-      newSearch ? 0 : page,
-      15
-    );
+    setSearchAttempted(true);
+    try {
+      const response = await movieService.searchMovies(
+        textInputValue.trimStart(),
+        selectedOrderASC ? 'ASC' : 'DESC',
+        orderBy,
+        newSearch ? 0 : page,
+        amountOfMoviesToGet
+      );
 
-    const filteredMovies = filterGenres(response.movies, selectedGenres);
-    setMovieData(newSearch ? filteredMovies : [...movieData, ...filteredMovies]);
-    setPage(newSearch ? 1 : page + 1);
-    setHasMore(response.movies.length > 0);
+      if (response && response.movies) {
+        const filteredMovies = filterGenres(response.movies, selectedGenres);
+        setMovieData(newSearch ? filteredMovies : [...movieData, ...filteredMovies]);
+        setPage(newSearch ? 1 : page + 1);
+        setHasMore(response.movies.length > 0);
+      } else {
+        setHasMore(false);
+      }
+    } catch (error) {
+      console.error("Error fetching movies: ", error);
+      setHasMore(false);
+    }
     setIsLoading(false);
   };
 
@@ -119,9 +117,12 @@ export default function Search({ navigation }) {
           keyExtractor={item => item.movieId}
           onEndReached={handleLoadMore}
           onEndReachedThreshold={0.5}
-          ListFooterComponent={isLoading ? <LoadingPage /> : null}
+          initialNumToRender={amountOfMoviesToGet}
+          windowSize={5}
+          removeClippedSubviews={true}
+          ListFooterComponent={isLoading && hasMore ? <LoadingPage size='small' /> : null}
         />
-      ) : searchInput ? (
+      ) : searchAttempted ? (
         <RenderNoResults textSearched={searchInput} />
       ) : (
         <RenderNoSearch />
@@ -142,63 +143,11 @@ export default function Search({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    backgroundColor: '#03152D',
-  },
-  headerContainer: {
-    width: wp('64%'),
-    height: hp('5.2%'),
-    flexDirection: 'row',
-    backgroundColor: '#CECECE',
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  searchIcon: {
-    marginLeft: wp('2%'),
-  },
-  inputContainer: {
-    marginLeft: wp('.5%'),
-    width: wp('82%'),
-  },
-  inputText: {
-    fontSize: hp('2%'),
-    color: '#000',
-  },
-  filterBtn: {
-    marginRight: wp('1.5%'),
-  },
-  noSearchContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  noSearchText: {
-    color: '#FAFAFA',
-    fontSize: hp('2.5%'),
-    fontWeight: 'bold',
-    paddingBottom: 25,
-  },
-  noResultsContainer: {
-    flex: 1,
-    alignItems: 'center',
-    marginHorizontal: wp('10%'),
-    justifyContent: 'center',
-  },
-  noResultsText: {
-    color: '#FAFAFA',
-    fontSize: hp('2.5%'),
-    fontWeight: 'bold',
-  },
-});
-
 const RenderNoSearch = () => {
   return (
     <View style={styles.noSearchContainer}>
       <Text style={styles.noSearchText}>Hoy estoy pensando en buscar...</Text>
-      <SearchIcon width={130} height={130} />
+      <SearchIconWhite width={130} height={130} />
     </View>
   );
 };

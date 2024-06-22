@@ -3,10 +3,10 @@ import React from 'react';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
-const LoadingPage = () => {
+const LoadingPage = ({ size = 'large' }) => {
     return (
         <View style={styles.container}>
-            <ActivityIndicator size="large" color="#D51D53" style={styles.loading} />
+            <ActivityIndicator size={size} color="#D51D53" style={styles.loading} />
         </View>
     );
 };

@@ -10,7 +10,7 @@ const movieService = {
       console.error(error);
     }
   },
-  searchMovies: async (input, sort, orderBy, page = 0, size = 15) => {
+  searchMovies: async (input, sort, orderBy, page = 0, size = 8) => {
     try {
       const response = await api.get(
         endpoints.movie.searchMovies(input, page, size, sort, orderBy),
@@ -19,6 +19,7 @@ const movieService = {
       return response.data;
     } catch (error) {
       console.error(error);
+      return {movies: []};
     }
   },
 

@@ -7,6 +7,7 @@ import {
 import FavoriteMovie_false from '../../assets/images/favoriteMovie_false.svg';
 import FavoriteMovie_true from '../../assets/images/favoriteMovie_true.svg';
 import RatingStar from '../../assets/images/ratingStar.svg';
+import RatingStarsInRow from '../../components/RatingStarsInRow';
 import { useNavigation } from '@react-navigation/native';
 
 
@@ -21,20 +22,8 @@ const SearchMovieCard = React.memo(({ movie }) => {
     return <GenreCard genre={genre.name} key={genre.genreId} />;
   });
 
-  const ratingStarsList = [];
   const rate = (movie.rating / 2).toFixed(2);
 
-  for (let i = 1; i <= 5; i++) {
-    ratingStarsList.push(
-      <RatingStar
-        key={i}
-        style={styles.body.ratingStar}
-        fill={i < rate ? '#FFD700' : '#03152D'}
-        width={styles.body.ratingStar.width}
-        height={styles.body.ratingStar.height}
-      />,
-    );
-  }
   
   const handlePosterPress = () => {
     navigation.navigate('MovieDetails', { movie });
@@ -59,7 +48,13 @@ const SearchMovieCard = React.memo(({ movie }) => {
       <View style={styles.body.container}>
         <Text style={styles.body.title}>{movie.title}</Text>
         <View style={styles.body.rating.container}>
-          {ratingStarsList}
+
+          <RatingStarsInRow 
+            rate={movie.rating} 
+            width={styles.body.ratingStar.width} 
+            height={styles.body.ratingStar.height}
+            style={styles.body.ratingStar}
+            />
           <Text style={styles.body.rating.text}>{rate}</Text>
         </View>
         <View style={styles.body.genre}>

@@ -38,17 +38,12 @@ export const MainStack = () => {
         component={MovieDetails}
         options={{
           headerTitle: '',
-          headerTitleStyle: {
-            color: '#FAFAFA',
-            fontSize: hp('2.75%'),
-            weight: 'medium',
-            letterSpacing: 2,
-          },
           headerStyle: {
             backgroundColor: '#192941',
           },
           headerTintColor: '#FAFAFA',
         }}
+        // Missing header right with bookmark button
         />
     </Stack.Navigator>
   );

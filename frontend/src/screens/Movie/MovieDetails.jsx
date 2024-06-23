@@ -1,39 +1,39 @@
 import React, { useEffect, useState, useLayoutEffect } from 'react';
-import { View, Text, Image, StyleSheet, ScrollView, Alert, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, ScrollView, Alert, ActivityIndicator, TouchableOpacity, Linking, Share } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import RatingStar from '../../assets/images/ratingStar.svg';
 import { CastCarousel, GalleryCarousel } from './MovieDetails.carousels';
 import { styles } from './MovieDetails.styles';
 import RatePopUp from './MovieDetails.ratePopUp';
+import movieService from '../../services/moviesService';
+import LoadingPage from '../../components/LoadingPage';
 
 const MovieDetails = ({ route, navigation }) => {
-    // const { movie } = route.params; // I need to do an api call with the movie_id
+    const { movieId } = route.params.movie;
     const [hasUserRated, setHasUserRated] = useState(false);
     const [isSynopsisExpanded, setIsSynopsisExpanded] = useState(false);
     const [isRatePopUpVisible, setIsRatePopUpVisible] = useState(false);
+    const [movie, setMovie] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [showMoreVisible, setShowMoreVisible] = useState(false);
 
-    const movie = {
-        title: 'The Shawshank Redemption',
-        releaseDate: '1994',
-        hourLength: 2,
-        minutesLength: 22,
-        directors: [{ name: 'Frank Darabont', actor_id: 1, portrait_image_link: "https://image.tmdb.org/t/p/original/b6JdzqTn6UFYf4DouHbbE8Ypk4r.jpg" }],
-        voteCount: 2000,
-        synopsis: "asdasdsada adsad ada ddasdad asd adada dd ada adas dasd asd ada dasdasd asd ad adasd asd as dasda ctetur non provident reiciendis! Asperiores expedita repellendus atque nostrum vitae. Rerum dolorum quo amet in deleniti expedita eveniet aliquam? Quam officiis delectus quaerat laudantium voluptas placeat omnis sit nam assumenda tempora optio, quas magnam quae. Veritatis nihil dolor unde eligendi a.",
-        posterImageLink: 'https://image.tmdb.org/t/p/original/pxbGZewX327IbTvrCVRJgcLJTSQ.jpg',
-        rating: 9.3,
-        genres: ['Drama', 'Crime'],
-        trailerLink: 'https://www.youtube.com/watch?v=6hB3S9bIaco',
-        galleryImagesLink: ['https://image.tmdb.org/t/p/original/pxbGZewX327IbTvrCVRJgcLJTSQ.jpg', 'https://image.tmdb.org/t/p/original/pxbGZewX327IbTvrCVRJgcLJTSQ.jpg', 'https://image.tmdb.org/t/p/original/pxbGZewX327IbTvrCVRJgcLJTSQ.jpg', 'https://image.tmdb.org/t/p/original/pxbGZewX327IbTvrCVRJgcLJTSQ.jpg'],
-        cast: [{ name: 'Tim Robbins', actor_id: 1, portrait_image_link: "https://image.tmdb.org/t/p/original/b6JdzqTn6UFYf4DouHbbE8Ypk4r.jpg" },
-        { name: 'Morgan Freeman First', actor_id: 2, portrait_image_link: "https://image.tmdb.org/t/p/original/b6JdzqTn6UFYf4DouHbbE8Ypk4r.jpg" },
-        { name: 'Bob Gunton', actor_id: 3, portrait_image_link: "https://image.tmdb.org/t/p/original/b6JdzqTn6UFYf4DouHbbE8Ypk4r.jpg" },
-        { name: 'William Sadler', actor_id: 4, portrait_image_link: "https://image.tmdb.org/t/p/original/b6JdzqTn6UFYf4DouHbbE8Ypk4r.jpg" },
-        { name: 'Clancy Brown', actor_id: 5, portrait_image_link: "https://image.tmdb.org/t/p/original/b6JdzqTn6UFYf4DouHbbE8Ypk4r.jpg" },
-        ]
-    };
+    useEffect(() => {
+        movieService.getMovieById(movieId)
+            .then((response) => {
+                setMovie(response);
+                setIsLoading(false);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }, []);
 
+    if (isLoading) {
+        return <LoadingPage />;
+    }
+
+    const releaseYear = movie.releaseDate.split('-')[0];
     const rate = (movie.rating / 2).toFixed(2);
 
     const toggleSynopsis = () => {
@@ -55,22 +55,54 @@ const MovieDetails = ({ route, navigation }) => {
         setIsRatePopUpVisible(false);
     };
 
+    const handleSynopsisLayout = (event) => {
+        const { height } = event.nativeEvent.layout;
+        const lineHeight = 18;
+        const numberOfLines = parseInt(height / lineHeight);
+
+        if (numberOfLines > 6) {
+            setShowMoreVisible(true);
+        }
+    };
+
+    const handlePlayTrailer = () => {
+        Linking.openURL(movie.trailerLink).catch((err) => console.error('An error occurred', err));
+    };
+
+    const handleShare = async () => {
+        try {
+            const result = await Share.share({
+                message: `Mira el trailer de esta pelicula: ${movie.trailerLink}`,
+            });
+
+            if (result.action === Share.sharedAction) {
+                if (result.activityType) {
+                    // Compartido con tipo de actividad
+                } else {
+                    // Compartido
+                }
+            } else if (result.action === Share.dismissedAction) {
+                // Descartado
+            }
+        } catch (error) {
+            Alert.alert('Error', 'Failed to share the movie');
+        }
+    };
+
     return (
         <ScrollView style={styles.container}>
-
-
             {/* HEADER */}
             <View style={styles.header}>
                 <Text style={styles.headerTitle}>{movie.title}</Text>
                 <View style={styles.subtitleContainer}>
                     <Text style={styles.subtitleText}>
-                        {movie.releaseDate} - {movie.hourLength}h{movie.minutesLength}m
+                        {releaseYear} - {movie.hourLength}h{movie.minuteLength}m
                     </Text>
-                    <Ionicons name='share-social-outline' size={wp('7%')} color='#D51D53' />
+                    <TouchableOpacity onPress={handleShare}>
+                        <Ionicons name='share-social-outline' size={wp('7%')} color='#D51D53' />
+                    </TouchableOpacity>
                 </View>
             </View>
-
-
 
             {/* POSTER AND TRAILER BTN PLAY */}
             <View style={styles.posterContainer}>
@@ -80,29 +112,30 @@ const MovieDetails = ({ route, navigation }) => {
                     style={styles.poster}
                     resizeMode="stretch"
                 />
-                <Ionicons name="play" size={hp('14%')} color="#DADADA" style={styles.playIcon} />
+                <TouchableOpacity onPress={handlePlayTrailer} style={styles.playButton}>
+                    <Ionicons name="play" size={hp('14%')} color="#DADADA" style={styles.playIcon} />
+                </TouchableOpacity>
             </View>
-
-
 
             {/* SYNOPSIS */}
             <TouchableOpacity onPress={toggleSynopsis} style={styles.synopsisContainer}>
                 <Text
+                    onLayout={handleSynopsisLayout}
                     style={styles.synopsisText}
                     numberOfLines={isSynopsisExpanded ? null : 6}
                     ellipsizeMode='tail'
                 >
                     {movie.synopsis}
                 </Text>
-                <View style={styles.showMoreText}>
-                    <Text style={styles.showMoreText.text}>
-                        {isSynopsisExpanded ? 'Mostrar menos' : 'Mostrar más'}
-                    </Text>
-                    <Ionicons name={isSynopsisExpanded ? 'chevron-up' : 'chevron-down'} size={wp('5%')} color='#A0153E' />
-                </View>
+                {showMoreVisible && (
+                    <View style={styles.showMoreText}>
+                        <Text style={styles.showMoreText.text}>
+                            {isSynopsisExpanded ? 'Mostrar menos' : 'Mostrar más'}
+                        </Text>
+                        <Ionicons name={isSynopsisExpanded ? 'chevron-up' : 'chevron-down'} size={wp('5%')} color='#A0153E' />
+                    </View>
+                )}
             </TouchableOpacity>
-
-
 
             {/* RATING */}
             <View style={styles.ratingContainer}>
@@ -124,8 +157,6 @@ const MovieDetails = ({ route, navigation }) => {
                 </TouchableOpacity>
             </View>
 
-
-
             {/* CAROUSELS */}
             <View style={styles.carouselsContainer}>
                 <View style={styles.carouselsContainer.info}>
@@ -141,7 +172,7 @@ const MovieDetails = ({ route, navigation }) => {
                         <View style={styles.carouselsContainer.info.title.line} />
                         <Text style={styles.carouselsContainer.info.title.text}>Reparto</Text>
                     </View>
-                    <CastCarousel cast={movie.cast} />
+                    <CastCarousel cast={movie.actors} />
                 </View>
 
                 <View style={styles.carouselsContainer.info}>
@@ -149,7 +180,7 @@ const MovieDetails = ({ route, navigation }) => {
                         <View style={styles.carouselsContainer.info.title.line} />
                         <Text style={styles.carouselsContainer.info.title.text}>Galeria</Text>
                     </View>
-                    <GalleryCarousel images={movie.galleryImagesLink} />
+                    <GalleryCarousel galleryImagesLink={movie.galleryImagesLink} />
                 </View>
             </View>
 
@@ -162,5 +193,6 @@ const MovieDetails = ({ route, navigation }) => {
         </ScrollView>
     );
 };
+
 
 export default MovieDetails;

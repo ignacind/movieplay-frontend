@@ -23,6 +23,19 @@ const movieService = {
     }
   },
 
+  getMovieById: async (movieId) => {
+    try {
+      const response = await api.get(
+        endpoints.movie.getMovieById(movieId)
+      )
+
+      return response.data
+
+    } catch(error) {
+      console.error(error)
+    }
+  }
+
 };
 
 export default movieService;

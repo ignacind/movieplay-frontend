@@ -40,8 +40,11 @@ export const styles = StyleSheet.create({
         width: wp('100%'),
         height: hp('30%'),
     },
-    playIcon: {
+    playButton: {
         position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: [{ translateX: -50 }, { translateY: -50 }],
     },
 
 

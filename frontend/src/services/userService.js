@@ -49,6 +49,18 @@ const userService = {
     }
   },
 
+  addMovieToFavorites: async (userId, movieId) => {
+    try {
+      const response = await api.post(
+        endpoints.user.addMovieToFavorites(userId, movieId),
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Error adding movie to favorites:', error);
+      throw error;
+    }
+  },
+
   removeMovieFromFavorites: async (userId, movieId) => {
     try {
       const response = await api.delete(

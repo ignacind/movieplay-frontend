@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, Pressable } from 'react-native';
+import { View, Text, Image, StyleSheet, Pressable, TouchableOpacity } from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -11,12 +11,11 @@ import RatingStarsInRow from '../../components/RatingStarsInRow';
 import { useNavigation } from '@react-navigation/native';
 
 
-
-const SearchMovieCard = React.memo(({ movie }) => {
-
+const SearchMovieCard = React.memo(({ movie, addMovieToFavorites, removeMovieFromFavorites }) => {
+  
   const navigation = useNavigation();
-
-  const [isFavorite, setIsFavorite] = React.useState(false);
+  
+  const [isFavorite, setIsFavorite] = React.useState(movie.isFavorite);
   
   const genresList = movie.genres.map(genre => {
     return <GenreCard genre={genre.name} key={genre.genreId} />;
@@ -24,7 +23,18 @@ const SearchMovieCard = React.memo(({ movie }) => {
 
   const rate = (movie.rating / 2).toFixed(2);
 
-  
+  const handleBookmarkPress = async () => {
+    try {
+    if (isFavorite) {
+      await removeMovieFromFavorites(movie.movieId);
+    } else {
+      await addMovieToFavorites(movie.movieId);
+    }
+    setIsFavorite(!isFavorite); 
+  } catch (error) {
+      console.log(error);
+    }
+  };
   const handlePosterPress = () => {
     navigation.navigate('MovieDetails', { movie });
   };
@@ -60,15 +70,15 @@ const SearchMovieCard = React.memo(({ movie }) => {
         <View style={styles.body.genre}>
           {genresList < 3 ? genresList : genresList.slice(0, 3)}
         </View>
-        <Pressable
+        <TouchableOpacity
           style={styles.body.favorite}
-          onPress={() => setIsFavorite(!isFavorite)}>
+          onPress={handleBookmarkPress}>
           {!isFavorite ? (
             <FavoriteMovie_false></FavoriteMovie_false>
           ) : (
             <FavoriteMovie_true></FavoriteMovie_true>
           )}
-        </Pressable>
+        </TouchableOpacity>
       </View>
     </View>
   );

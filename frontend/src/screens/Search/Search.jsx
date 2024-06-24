@@ -30,7 +30,6 @@ export default function Search({ navigation }) {
   const userId = useSelector(state => state.user.userId)
 
   const { movieData, isLoading, hasMore, searchAttempted, page, handleSearch, handleLoadMore } = useSearchMovies(searchInput, userId, orderByMethod, selectedGenres, selectedOrderASC);
-  const { addMovieToFavorites, removeMovieFromFavorites } = useHandleFavorites(userId);
 
 
   useEffect(() => {
@@ -66,12 +65,7 @@ export default function Search({ navigation }) {
       ) : movieData.length > 0 ? (
         <FlatList
           data={movieData}
-          renderItem={({ item }) =>
-            <SearchMovieCard
-              movie={item}
-              addMovieToFavorites={() => addMovieToFavorites(item.movieId)}
-              removeMovieFromFavorites={() => removeMovieFromFavorites(item.movieId)}
-            />}
+          renderItem={({ item }) => <SearchMovieCard movie={item} />}
           keyExtractor={item => item.movieId}
           onEndReached={handleLoadMore}
           onEndReachedThreshold={0.5}

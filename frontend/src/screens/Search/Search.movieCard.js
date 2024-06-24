@@ -1,21 +1,18 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, Pressable, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, Pressable } from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import FavoriteMovie_false from '../../assets/images/favoriteMovie_false.svg';
-import FavoriteMovie_true from '../../assets/images/favoriteMovie_true.svg';
-import RatingStar from '../../assets/images/ratingStar.svg';
 import RatingStarsInRow from '../../components/RatingStarsInRow';
 import { useNavigation } from '@react-navigation/native';
+import BookmarkButton from '../../components/BookmarkButton';
 
 
 const SearchMovieCard = React.memo(({ movie, addMovieToFavorites, removeMovieFromFavorites }) => {
   
   const navigation = useNavigation();
   
-  const [isFavorite, setIsFavorite] = React.useState(movie.isFavorite);
   
   const genresList = movie.genres.map(genre => {
     return <GenreCard genre={genre.name} key={genre.genreId} />;
@@ -23,18 +20,6 @@ const SearchMovieCard = React.memo(({ movie, addMovieToFavorites, removeMovieFro
 
   const rate = (movie.rating / 2).toFixed(2);
 
-  const handleBookmarkPress = async () => {
-    try {
-    if (isFavorite) {
-      await removeMovieFromFavorites(movie.movieId);
-    } else {
-      await addMovieToFavorites(movie.movieId);
-    }
-    setIsFavorite(!isFavorite); 
-  } catch (error) {
-      console.log(error);
-    }
-  };
   const handlePosterPress = () => {
     navigation.navigate('MovieDetails', { movie });
   };
@@ -70,15 +55,7 @@ const SearchMovieCard = React.memo(({ movie, addMovieToFavorites, removeMovieFro
         <View style={styles.body.genre}>
           {genresList < 3 ? genresList : genresList.slice(0, 3)}
         </View>
-        <TouchableOpacity
-          style={styles.body.favorite}
-          onPress={handleBookmarkPress}>
-          {!isFavorite ? (
-            <FavoriteMovie_false></FavoriteMovie_false>
-          ) : (
-            <FavoriteMovie_true></FavoriteMovie_true>
-          )}
-        </TouchableOpacity>
+        <BookmarkButton movieId={movie.movieId} isAlreadyFavorite={movie.isFavorite}/>
       </View>
     </View>
   );

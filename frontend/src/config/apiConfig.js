@@ -4,8 +4,8 @@ import {setupTokenInterceptors} from './tokenInterceptors';
 import {setupErrorsInterceptors} from './ErrorInterceptors';
 
 
-// const API_BASE_URL = API_BASE_URL_LOCAL;
-const API_BASE_URL = API_BASE_URL_DEV;
+const API_BASE_URL = API_BASE_URL_LOCAL;
+// const API_BASE_URL = API_BASE_URL_DEV;
 
 const API_VERSION = '/api/v1';
 

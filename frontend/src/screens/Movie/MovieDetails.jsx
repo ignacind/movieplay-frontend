@@ -26,6 +26,8 @@ const MovieDetails = ({ route, navigation }) => {
         return <LoadingPage />;
     }
 
+
+
     const releaseYear = movie.releaseDate.split('-')[0];
     const rate = (movie.rating / 2).toFixed(2);
 

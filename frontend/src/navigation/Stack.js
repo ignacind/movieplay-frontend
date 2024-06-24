@@ -43,11 +43,15 @@ export const MainStack = () => {
             backgroundColor: '#192941',
           },
           headerTintColor: '#FAFAFA',
-          headerRight: () => 
+          headerRight: () => {
+            console.log("Is favorite? ", route.params.movie.isFavorite)
+            return (
           <BookmarkButton 
             movieId={route.params.movie.movieId} 
             isAlreadyFavorite={route.params.movie.isFavorite}
             />
+            )
+          }
         })}
       />
     </Stack.Navigator>

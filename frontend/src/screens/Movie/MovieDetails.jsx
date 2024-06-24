@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Image, ScrollView, Alert, TouchableOpacity, Linking, Share } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -25,7 +25,6 @@ const MovieDetails = ({ route, navigation }) => {
     if (isLoading || !movie) {
         return <LoadingPage />;
     }
-
 
 
     const releaseYear = movie.releaseDate.split('-')[0];

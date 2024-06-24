@@ -21,13 +21,8 @@ const BookmarkButton = ({ movieId, isAlreadyFavorite }) => {
   };
 
   return (
-    <TouchableOpacity
-    onPress={handleBookmarkPress}>
-    {!isFavorite ? (
-      <FavoriteMovie_false></FavoriteMovie_false>
-    ) : (
-      <FavoriteMovie_true></FavoriteMovie_true>
-    )}
+    <TouchableOpacity onPress={handleBookmarkPress}>
+    {!isFavorite ?  <FavoriteMovie_false /> : <FavoriteMovie_true />}
   </TouchableOpacity>
   );
 };

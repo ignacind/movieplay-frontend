@@ -15,6 +15,7 @@ import LoadingPage from '../../components/LoadingPage';
 import FilterPopup from './Search.filterPopUp';
 
 import { styles } from './Search.styles';
+import { useSelector } from 'react-redux';
 
 export default function Search({ navigation }) {
   const [searchInput, setSearchInput] = useState('');
@@ -27,6 +28,8 @@ export default function Search({ navigation }) {
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [searchAttempted, setSearchAttempted] = useState(false);
+
+  const userId = useSelector(state => state.user.userId)
 
   const amountOfMoviesToGet = 8;
   const inputRef = useRef();
@@ -76,7 +79,8 @@ export default function Search({ navigation }) {
         selectedOrderASC ? 'ASC' : 'DESC',
         orderBy,
         newSearch ? 0 : page,
-        amountOfMoviesToGet
+        amountOfMoviesToGet,
+        userId
       );
 
       if (response && response.movies) {

@@ -1,35 +1,28 @@
-import React, { useEffect, useState, useLayoutEffect } from 'react';
-import { View, Text, Image, StyleSheet, ScrollView, Alert, ActivityIndicator, TouchableOpacity, Linking, Share } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Image, ScrollView, Alert, TouchableOpacity, Linking, Share } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import RatingStar from '../../assets/images/ratingStar.svg';
 import { CastCarousel, GalleryCarousel } from './MovieDetails.carousels';
 import { styles } from './MovieDetails.styles';
 import RatePopUp from './MovieDetails.ratePopUp';
-import movieService from '../../services/moviesService';
 import LoadingPage from '../../components/LoadingPage';
+import useFetchMovieDetails from '../../hooks/useFetchMovieDetails'
+import { useSelector } from 'react-redux';
 
 const MovieDetails = ({ route, navigation }) => {
     const { movieId } = route.params.movie;
+    const userId = useSelector(state => state.user.userId);
     const [hasUserRated, setHasUserRated] = useState(false);
     const [isSynopsisExpanded, setIsSynopsisExpanded] = useState(false);
     const [isRatePopUpVisible, setIsRatePopUpVisible] = useState(false);
-    const [movie, setMovie] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
     const [showMoreVisible, setShowMoreVisible] = useState(false);
 
-    useEffect(() => {
-        movieService.getMovieById(movieId)
-            .then((response) => {
-                setMovie(response);
-                setIsLoading(false);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }, []);
 
-    if (isLoading) {
+    const { movie, isLoading } = useFetchMovieDetails(movieId, userId);
+
+
+    if (isLoading || !movie) {
         return <LoadingPage />;
     }
 

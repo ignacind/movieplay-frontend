@@ -10,10 +10,10 @@ const movieService = {
       console.error(error);
     }
   },
-  searchMovies: async (input, sort, orderBy, page = 0, size = 8) => {
+  searchMovies: async (input, sort, orderBy, page = 0, size = 8, userId) => {
     try {
       const response = await api.get(
-        endpoints.movie.searchMovies(input, page, size, sort, orderBy),
+        endpoints.movie.searchMovies(input, page, size, sort, orderBy, userId),
       );
 
       return response.data;
@@ -23,10 +23,10 @@ const movieService = {
     }
   },
 
-  getMovieById: async (movieId) => {
+  getMovieById: async (movieId, userId) => {
     try {
       const response = await api.get(
-        endpoints.movie.getMovieById(movieId)
+        endpoints.movie.getMovieById(movieId, userId)
       )
 
       return response.data

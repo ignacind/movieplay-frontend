@@ -28,7 +28,7 @@ export default function Search({ navigation }) {
   const amountOfMoviesToGet = 8;
   const inputRef = useRef();
   const userId = useSelector(state => state.user.userId)
-
+  const favorites = useSelector(state => state.tempFavorites.favorites)
   const { movieData, isLoading, hasMore, searchAttempted, page, handleSearch, handleLoadMore } = useSearchMovies(searchInput, userId, orderByMethod, selectedGenres, selectedOrderASC);
 
 
@@ -53,7 +53,6 @@ export default function Search({ navigation }) {
   }, [searchInput, isFilterPopupVisible]);
 
 
-
   const applyFilters = () => {
     handleSearch(true);
   };
@@ -65,7 +64,7 @@ export default function Search({ navigation }) {
       ) : movieData.length > 0 ? (
         <FlatList
           data={movieData}
-          renderItem={({ item }) => <SearchMovieCard movie={item} />}
+          renderItem={({ item }) => <SearchMovieCard key={`movie-${item.movieId}-${favorites[item.movieId]}`} movie={item} />}
           keyExtractor={item => item.movieId}
           onEndReached={handleLoadMore}
           onEndReachedThreshold={0.5}

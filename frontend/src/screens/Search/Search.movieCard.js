@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, Image, StyleSheet, Pressable } from 'react-native';
 import {
   widthPercentageToDP as wp,
@@ -7,13 +7,13 @@ import {
 import RatingStarsInRow from '../../components/RatingStarsInRow';
 import { useNavigation } from '@react-navigation/native';
 import BookmarkButton from '../../components/BookmarkButton';
+import { useSelector } from 'react-redux';
 
 
-const SearchMovieCard = React.memo(({ movie, addMovieToFavorites, removeMovieFromFavorites }) => {
+const SearchMovieCard = React.memo(({ movie }) => {
   
   const navigation = useNavigation();
-  
-  
+
   const genresList = movie.genres.map(genre => {
     return <GenreCard genre={genre.name} key={genre.genreId} />;
   });

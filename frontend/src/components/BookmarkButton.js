@@ -5,18 +5,15 @@ import FavoriteMovie_false from '../assets/images/favoriteMovie_false.svg';
 import FavoriteMovie_true from '../assets/images/favoriteMovie_true.svg';
 import useHandleFavorites from '../hooks/useHandleFavorites';
 
-const BookmarkButton = ({ movieId, isAlreadyFavorite }) => {
+const BookmarkButton = ({ movieId, isAlreadyFavorite}) => {
   const userId = useSelector(state => state.user.userId);
   const { addMovieToFavorites, removeMovieFromFavorites } = useHandleFavorites(userId);
-  const [isFavorite, setIsFavorite] = useState(isAlreadyFavorite);
-
+  const tempFavorites = useSelector(state => state.tempFavorites.favorites);
+  const [isFavorite, setIsFavorite] = useState(tempFavorites[movieId] || isAlreadyFavorite);
 
   const handleBookmarkPress = async () => {
-    if (isFavorite) {
-      await removeMovieFromFavorites(movieId);
-    } else {
-      await addMovieToFavorites(movieId);
-    }
+    const responseOk = await (!isFavorite ? addMovieToFavorites(movieId) : removeMovieFromFavorites(movieId))
+    if (!responseOk) return;
     setIsFavorite(!isFavorite);
   };
 

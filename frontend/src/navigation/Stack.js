@@ -44,7 +44,6 @@ export const MainStack = () => {
           },
           headerTintColor: '#FAFAFA',
           headerRight: () => {
-            console.log("Is favorite? ", route.params.movie.isFavorite)
             return (
           <BookmarkButton 
             movieId={route.params.movie.movieId} 

@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
-  Text,
   TouchableOpacity,
   FlatList,
 } from 'react-native';
@@ -28,7 +27,15 @@ export default function Search({ navigation }) {
   const inputRef = useRef();
   const userId = useSelector(state => state.user.userId)
   const favorites = useSelector(state => state.tempFavorites.favorites)
-  const { movieData, isLoading, hasMore, searchAttempted, page, handleSearch, handleLoadMore } = useSearchMovies(searchInput, userId, orderByMethod, selectedGenres, selectedOrderASC);
+
+
+  const { movieData,
+    isLoading,
+    hasMore,
+    searchAttempted,
+    page,
+    handleSearch,
+    handleLoadMore } = useSearchMovies(searchInput, userId, orderByMethod, selectedGenres, selectedOrderASC);
 
 
   useEffect(() => {
@@ -56,6 +63,7 @@ export default function Search({ navigation }) {
     handleSearch(true);
   };
 
+
   return (
     <View style={styles.container}>
       {isLoading && page === 0 ? (
@@ -63,7 +71,11 @@ export default function Search({ navigation }) {
       ) : movieData.length > 0 ? (
         <FlatList
           data={movieData}
-          renderItem={({ item }) => <SearchMovieCard key={`movie-${item.movieId}-${item.isFavorite}-${item.rating}`} movie={item} />}
+          renderItem={({ item }) =>
+            <SearchMovieCard
+              key={`movie-${item.movieId}-${item.isFavorite}-${favorites[item.movieId]}-${item.rating}`}
+              movie={item}
+            />}
           keyExtractor={(item, index) => `movie-${item.movieId}-${index}`}
           onEndReached={handleLoadMore}
           onEndReachedThreshold={0.5}

@@ -47,7 +47,6 @@ export const MainStack = () => {
             return (
           <BookmarkButton 
             movieId={route.params.movie.movieId} 
-            isAlreadyFavorite={route.params.movie.isFavorite}
             />
             )
           }

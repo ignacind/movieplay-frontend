@@ -1,7 +1,12 @@
 import { useState } from 'react';
 import movieService from '../services/moviesService';
+import { changeStateFavorite } from '../redux/slices/tempFavoritesSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 const useSearchMovies = (searchInput, userId, orderByMethod, selectedGenres, selectedOrderASC) => {
+  const dispatch = useDispatch();
+  const favorites = useSelector(state => state.tempFavorites.favorites);
+
   const [movieData, setMovieData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
@@ -44,9 +49,15 @@ const useSearchMovies = (searchInput, userId, orderByMethod, selectedGenres, sel
         setMovieData(newSearch ? filteredMovies : [...movieData, ...filteredMovies]);
         setPage(newSearch ? 1 : page + 1);
         setHasMore(response.movies.length > 0);
+        addResponseMoviesToTempFavorites(filteredMovies);
+    
+
       } else {
         setHasMore(false);
       }
+      
+
+
     } catch (error) {
       console.error("Error fetching movies: ", error);
       setHasMore(false);
@@ -58,6 +69,12 @@ const useSearchMovies = (searchInput, userId, orderByMethod, selectedGenres, sel
     if (!isLoading && hasMore) {
       handleSearch(false);
     }
+  };
+
+  const addResponseMoviesToTempFavorites =  (movies) => {
+      movies.forEach(movie => {
+        dispatch(changeStateFavorite({ movieId: movie.movieId, isFavorite: movie.isFavorite }));
+      });
   };
 
   return { movieData, isLoading, hasMore, searchAttempted, page, handleSearch, handleLoadMore };

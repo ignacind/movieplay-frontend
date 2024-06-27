@@ -7,15 +7,12 @@ const tempFavoritesSlice = createSlice({
     favorites: {}
   },
   reducers: {
-    addFavorite(state, action) {
-      state.favorites[action.payload] = true;
-    },
-    removeFavorite(state, action) {
-      state.favorites[action.payload] = false;
+    changeStateFavorite: (state, action) => {
+      state.favorites[action.payload.movieId] = action.payload.isFavorite;
     }
   }
 
 })
 
-export const { addFavorite, removeFavorite } = tempFavoritesSlice.actions;
+export const { changeStateFavorite } = tempFavoritesSlice.actions;
 export default tempFavoritesSlice.reducer;

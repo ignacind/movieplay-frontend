@@ -8,14 +8,14 @@ import RatingStarsInRow from '../../components/RatingStarsInRow';
 import { useNavigation } from '@react-navigation/native';
 import BookmarkButton from '../../components/BookmarkButton';
 import { useSelector } from 'react-redux';
-
+import { genreMap_EN_ES as genreMap } from './genreMap';
 
 const SearchMovieCard = React.memo(({ movie }) => {
   
   const navigation = useNavigation();
 
   const genresList = movie.genres.map(genre => {
-    return <GenreCard genre={genre.name} key={genre.genreId} />;
+    return <GenreCard genre={genreMap[genre.name]} key={genre.genreId} />;
   });
 
   const rate = (movie.rating / 2).toFixed(2);
@@ -55,7 +55,9 @@ const SearchMovieCard = React.memo(({ movie }) => {
         <View style={styles.body.genre}>
           {genresList < 3 ? genresList : genresList.slice(0, 3)}
         </View>
-        <BookmarkButton movieId={movie.movieId} isAlreadyFavorite={movie.isFavorite}/>
+        <View style={styles.body.favorite}>
+          <BookmarkButton movieId={movie.movieId}/>
+        </View>
       </View>
     </View>
   );
@@ -137,8 +139,11 @@ const styles = StyleSheet.create({
         fontSize: hp('1.5%'),
       },
     },
-
-    favorite: {},
+    
+    favorite: {
+      width: wp('5%'),
+      alignItems: 'start',
+    },
   },
 });
 

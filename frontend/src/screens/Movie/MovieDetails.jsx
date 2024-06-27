@@ -17,10 +17,18 @@ const MovieDetails = ({ route, navigation }) => {
     const [isRatePopUpVisible, setIsRatePopUpVisible] = useState(false);
     const [showMoreVisible, setShowMoreVisible] = useState(false);
 
-    const [userRating, setUserRating] = useState(0)
+    const [userRate, setUserRate] = useState(0)
+    const [localVoteCount, setLocalVoteCount] = useState(0)
     const [changedRate, setChangedRate] = useState(0)
 
     const { movie, isLoading } = useFetchMovieDetails(movieId, userId);
+
+    useEffect(() => {
+        if (movie) {
+            setUserRate(movie.userRating / 2);
+            setLocalVoteCount(movie.voteCount);
+        }
+    }, [movie]);
 
 
     if (isLoading || !movie) {
@@ -45,9 +53,11 @@ const MovieDetails = ({ route, navigation }) => {
     };
 
     const handleRatingSubmit = (rating) => {
-        setUserRating(rating);
+        setUserRate(rating);
         setIsRatePopUpVisible(false);
-        let newRate = ((movie.rating * movie.voteCount) + (rating * 2)) / movie.voteCount + 1;
+        setLocalVoteCount(movie.userRating === 0 ? localVoteCount + 1 : localVoteCount);
+        let oldRatingSum = (movie.rating * movie.voteCount) - (movie.userRating === 0 ? 0 : movie.userRating)
+        let newRate = (oldRatingSum + rating * 2) / localVoteCount;
         setChangedRate((newRate / 2).toFixed(2));
     };
 
@@ -70,16 +80,7 @@ const MovieDetails = ({ route, navigation }) => {
             const result = await Share.share({
                 message: `Mira el trailer de esta pelicula: ${movie.trailerLink}`,
             });
-
-            if (result.action === Share.sharedAction) {
-                if (result.activityType) {
-                    // Compartido con tipo de actividad
-                } else {
-                    // Compartido
-                }
-            } else if (result.action === Share.dismissedAction) {
-                // Descartado
-            }
+            return result;
         } catch (error) {
             Alert.alert('Error', 'Failed to share the movie');
         }
@@ -137,17 +138,17 @@ const MovieDetails = ({ route, navigation }) => {
             <View style={styles.ratingContainer}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <RatingStar width={styles.ratingStar.width} height={styles.ratingStar.height} fill="#FFD700" stroke='#CEA100' />
-                    <Text style={styles.ratingContainer.voteCount}> {changedRate === 0 ? rate : changedRate} ({changedRate === 0 ? movie.voteCount : movie.voteCount + 1})</Text>
+                    <Text style={styles.ratingContainer.voteCount}> {changedRate === 0 ? rate : changedRate} ({localVoteCount})</Text>
                 </View>
                 <View style={styles.ratingContainer.userRating}>
                     <RatingStar
                         width={styles.ratingStar.width}
                         height={styles.ratingStar.height}
-                        fill={userRating !== 0 || movie.userRating ? '#FF4A6F' : 'rgba(0, 0, 0, 0.1)'}
+                        fill={userRate !== 0 || movie.userRating ? '#FF4A6F' : 'rgba(0, 0, 0, 0.1)'}
                         stroke={'#D51D53'}
                     />
-                    {<Text style={styles.ratingContainer.voteCount}> {userRating !== 0
-                        ? userRating
+                    {<Text style={styles.ratingContainer.voteCount}> {userRate !== 0
+                        ? userRate
                         : (movie.userRating !== 0)
                             ? movie.userRating / 2
                             :

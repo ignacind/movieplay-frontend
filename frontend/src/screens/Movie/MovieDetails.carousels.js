@@ -30,10 +30,10 @@ export const GalleryCarousel = ({ galleryImagesLink }) => {
         setIsVisible(true);
     };
 
-    if (galleryImagesLink === undefined || galleryImagesLink.length === 0) return null;
+    if (!galleryImagesLink || galleryImagesLink.length === 0) return null;
 
-    const imageUrls = galleryImagesLink.map(image => ({ url: image }));
-
+    const imageUrls = galleryImagesLink.map(image => ({ url: image.link }));
+    
     return (
         <View>
             <ScrollView horizontal style={styles.galleryContainer}>

@@ -16,7 +16,6 @@ import { styles } from './Search.styles';
 import { useSelector } from 'react-redux';
 
 import useSearchMovies from '../../hooks/useSearchMovies';
-import useHandleFavorites from '../../hooks/useHandleFavorites';
 import { RenderNoResults, RenderNoSearch } from './Search.noRenders';
 
 export default function Search({ navigation }) {
@@ -64,8 +63,8 @@ export default function Search({ navigation }) {
       ) : movieData.length > 0 ? (
         <FlatList
           data={movieData}
-          renderItem={({ item }) => <SearchMovieCard key={`movie-${item.movieId}-${favorites[item.movieId]}`} movie={item} />}
-          keyExtractor={item => item.movieId}
+          renderItem={({ item }) => <SearchMovieCard key={`movie-${item.movieId}-${item.isFavorite}-${item.rating}`} movie={item} />}
+          keyExtractor={(item, index) => `movie-${item.movieId}-${index}`}
           onEndReached={handleLoadMore}
           onEndReachedThreshold={0.5}
           initialNumToRender={amountOfMoviesToGet}

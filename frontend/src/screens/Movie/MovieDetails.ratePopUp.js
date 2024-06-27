@@ -3,18 +3,24 @@ import { View, Text, Modal, TouchableOpacity, StyleSheet } from 'react-native';
 import { Rating } from 'react-native-ratings';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import movieService from '../../services/moviesService';
 
-const RatePopUp = ({ visible, onClose, onSubmit, movieTitle }) => {
+const RatePopUp = ({ visible, onClose, onSubmit, movieTitle, movieId, userId }) => {
     const [rating, setRating] = useState(0);
 
     const handleRatingCompleted = (rating) => {
-        setRating(rating);
+        setRating(rating)
     };
 
 
-    const handleSubmitRating = () => {
+    const handleSubmitRating = async () => {
         // API CALL
-        onSubmit(rating * 2);
+        try {
+            await movieService.rateMovie(movieId, userId, rating*2);
+            onSubmit(rating);
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     return (
@@ -38,6 +44,7 @@ const RatePopUp = ({ visible, onClose, onSubmit, movieTitle }) => {
                         onFinishRating={handleRatingCompleted}
                         style={{ paddingVertical: 10 }}
                         tintColor='#192941'
+                        minValue={1}
                     />
                     <View style={styles.btnsContainer}>
                     <TouchableOpacity

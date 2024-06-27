@@ -34,8 +34,21 @@ const movieService = {
     } catch(error) {
       console.error(error)
     }
-  }
+  },
 
+  rateMovie: async (movieId, userId, rating) => {
+    try {
+      const response = await api.post(
+        endpoints.movie.rateMovie(movieId, userId),
+        { rating }
+      )
+      return response.data
+
+    } catch(error) {
+      console.error(error)
+    }
+  }
+  
 };
 
 export default movieService;

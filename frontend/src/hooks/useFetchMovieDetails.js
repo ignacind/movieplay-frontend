@@ -12,25 +12,24 @@ const useFetchMovieDetails = (movieId, userId) => {
         setLoading(true);
         try {
             const response = await movieService.getMovieById(movieId, userId);
-            console.log("THIS IS THE RESPONSE", response)
             setMovie(response);
             setLoading(false);
             setRetryCount(0);
         } catch (error) {
             console.log(error);
-            console.log("WE HAD A ERROR")
             setLoading(false);
             setRetryCount((prev) => prev + 1);
         }
     }, [movieId]);
 
+
     useEffect(() => {
         fetchMovieData();
     }, [movieId, fetchMovieData]);
+    
 
     useRetryCustomFetch({ retryCount, customFetchData: fetchMovieData });
 
-    console.log("THIS IS MOVIE FROM FETCH", movie)
 
     return { movie, loading };
 }

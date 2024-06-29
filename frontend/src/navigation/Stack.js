@@ -4,6 +4,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import Search from '../screens/Search/Search';
 import Login from '../screens/Login/Login';
 import MovieDetails from '../screens/Movie/MovieDetails';
+import BookmarkButton from '../components/BookmarkButton';
 import { TabGroup } from './TabGroup';
 
 const Stack = createNativeStackNavigator();
@@ -36,15 +37,21 @@ export const MainStack = () => {
       <Stack.Screen
         name="MovieDetails"
         component={MovieDetails}
-        options={{
+        options={({ route }) => ({
           headerTitle: '',
           headerStyle: {
             backgroundColor: '#192941',
           },
           headerTintColor: '#FAFAFA',
-        }}
-        // Missing header right with bookmark button
-        />
+          headerRight: () => {
+            return (
+          <BookmarkButton 
+            movieId={route.params.movie.movieId} 
+            />
+            )
+          }
+        })}
+      />
     </Stack.Navigator>
   );
 };

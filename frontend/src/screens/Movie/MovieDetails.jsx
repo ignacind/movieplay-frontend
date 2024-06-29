@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Image, ScrollView, Alert, TouchableOpacity, Linking, Share } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -14,20 +14,31 @@ import FastImage from 'react-native-fast-image';
 const MovieDetails = ({ route, navigation }) => {
     const { movieId } = route.params.movie;
     const userId = useSelector(state => state.user.userId);
-    const [hasUserRated, setHasUserRated] = useState(false);
     const [isSynopsisExpanded, setIsSynopsisExpanded] = useState(false);
     const [isRatePopUpVisible, setIsRatePopUpVisible] = useState(false);
     const [showMoreVisible, setShowMoreVisible] = useState(false);
 
+    const [userRate, setUserRate] = useState(0)
+    const [localVoteCount, setLocalVoteCount] = useState(0)
+    const [changedRate, setChangedRate] = useState(0)
 
     const { movie, isLoading } = useFetchMovieDetails(movieId, userId);
+
+    useEffect(() => {
+        if (movie) {
+            setUserRate(movie.userRating / 2);
+            setLocalVoteCount(movie.voteCount);
+        }
+    }, [movie]);
 
 
     if (isLoading || !movie) {
         return <LoadingPage />;
     }
 
+
     const releaseYear = movie.releaseDate.split('-')[0];
+
     const rate = (movie.rating / 2).toFixed(2);
 
     const toggleSynopsis = () => {
@@ -43,10 +54,12 @@ const MovieDetails = ({ route, navigation }) => {
     };
 
     const handleRatingSubmit = (rating) => {
-        // Lógica para enviar la calificación al servidor o actualizar el estado
-        Alert.alert('Calificación enviada', `Has calificado con ${rating / 2} estrellas.`);
-        setHasUserRated(true);
+        setUserRate(rating);
         setIsRatePopUpVisible(false);
+        setLocalVoteCount(movie.userRating === 0 ? localVoteCount + 1 : localVoteCount);
+        let oldRatingSum = (movie.rating * movie.voteCount) - (movie.userRating === 0 ? 0 : movie.userRating)
+        let newRate = (oldRatingSum + rating * 2) / localVoteCount;
+        setChangedRate((newRate / 2).toFixed(2));
     };
 
     const handleSynopsisLayout = (event) => {
@@ -68,16 +81,7 @@ const MovieDetails = ({ route, navigation }) => {
             const result = await Share.share({
                 message: `Mira el trailer de esta pelicula: ${movie.trailerLink}`,
             });
-
-            if (result.action === Share.sharedAction) {
-                if (result.activityType) {
-                    // Compartido con tipo de actividad
-                } else {
-                    // Compartido
-                }
-            } else if (result.action === Share.dismissedAction) {
-                // Descartado
-            }
+            return result;
         } catch (error) {
             Alert.alert('Error', 'Failed to share the movie');
         }
@@ -135,16 +139,21 @@ const MovieDetails = ({ route, navigation }) => {
             <View style={styles.ratingContainer}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <RatingStar width={styles.ratingStar.width} height={styles.ratingStar.height} fill="#FFD700" stroke='#CEA100' />
-                    <Text style={styles.ratingContainer.voteCount}> {rate} ({movie.voteCount})</Text>
+                    <Text style={styles.ratingContainer.voteCount}> {changedRate === 0 ? rate : changedRate} ({localVoteCount})</Text>
                 </View>
                 <View style={styles.ratingContainer.userRating}>
                     <RatingStar
                         width={styles.ratingStar.width}
                         height={styles.ratingStar.height}
-                        fill={hasUserRated ? '#FF4A6F' : 'rgba(0, 0, 0, 0.1)'}
+                        fill={userRate !== 0 || movie.userRating ? '#FF4A6F' : 'rgba(0, 0, 0, 0.1)'}
                         stroke={'#D51D53'}
                     />
-                    {<Text style={styles.ratingContainer.voteCount}> {hasUserRated ? rate : '(?)'}</Text>}
+                    {<Text style={styles.ratingContainer.voteCount}> {userRate !== 0
+                        ? userRate
+                        : (movie.userRating !== 0)
+                            ? movie.userRating / 2
+                            :
+                            '(?)'}</Text>}
                 </View>
                 <TouchableOpacity style={styles.ratingContainer.rateBtn} onPress={openRatePopUp}>
                     <Text style={styles.ratingContainer.rateBtn.text}>Califícar</Text>
@@ -183,6 +192,8 @@ const MovieDetails = ({ route, navigation }) => {
                 onClose={closeRatePopUp}
                 onSubmit={handleRatingSubmit}
                 movieTitle={movie.title}
+                movieId={movieId}
+                userId={userId}
             />
         </ScrollView>
     );

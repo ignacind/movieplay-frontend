@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, Image, StyleSheet, Pressable } from 'react-native';
 import {
   widthPercentageToDP as wp,
@@ -11,18 +11,15 @@ import BookmarkButton from '../../components/BookmarkButton';
 import { genreMap_EN_ES as genreMap } from './genreMap';
 
 const SearchMovieCard = React.memo(({ movie }) => {
-
+  
   const navigation = useNavigation();
 
-  const [isFavorite, setIsFavorite] = React.useState(false);
-  
   const genresList = movie.genres.map(genre => {
-    return <GenreCard genre={genre.name} key={genre.genreId} />;
+    return <GenreCard genre={genreMap[genre.name]} key={genre.genreId} />;
   });
 
   const rate = (movie.rating / 2).toFixed(2);
 
-  
   const handlePosterPress = () => {
     navigation.navigate('MovieDetails', { movie });
   };
@@ -57,15 +54,9 @@ const SearchMovieCard = React.memo(({ movie }) => {
         <View style={styles.body.genre}>
           {genresList < 3 ? genresList : genresList.slice(0, 3)}
         </View>
-        <Pressable
-          style={styles.body.favorite}
-          onPress={() => setIsFavorite(!isFavorite)}>
-          {!isFavorite ? (
-            <FavoriteMovie_false></FavoriteMovie_false>
-          ) : (
-            <FavoriteMovie_true></FavoriteMovie_true>
-          )}
-        </Pressable>
+        <View style={styles.body.favorite}>
+          <BookmarkButton movieId={movie.movieId}/>
+        </View>
       </View>
     </View>
   );
@@ -147,8 +138,11 @@ const styles = StyleSheet.create({
         fontSize: hp('1.5%'),
       },
     },
-
-    favorite: {},
+    
+    favorite: {
+      width: wp('5%'),
+      alignItems: 'start',
+    },
   },
 });
 

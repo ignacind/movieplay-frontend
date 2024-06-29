@@ -4,13 +4,11 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import FavoriteMovie_false from '../../assets/images/favoriteMovie_false.svg';
-import FavoriteMovie_true from '../../assets/images/favoriteMovie_true.svg';
-import RatingStar from '../../assets/images/ratingStar.svg';
+import FastImage from 'react-native-fast-image';
 import RatingStarsInRow from '../../components/RatingStarsInRow';
 import { useNavigation } from '@react-navigation/native';
-
-
+import BookmarkButton from '../../components/BookmarkButton';
+import { genreMap_EN_ES as genreMap } from './genreMap';
 
 const SearchMovieCard = React.memo(({ movie }) => {
 
@@ -36,9 +34,8 @@ const SearchMovieCard = React.memo(({ movie }) => {
       style={styles.poster.container} 
       onPress={handlePosterPress}>
 
-        <Image
+        <FastImage
           source={{ uri: movie.posterImageLink }}
-          alt={movie.title}
           style={styles.poster.image}
           resizeMode="cover"
         />

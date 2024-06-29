@@ -9,6 +9,7 @@ import RatePopUp from './MovieDetails.ratePopUp';
 import LoadingPage from '../../components/LoadingPage';
 import useFetchMovieDetails from '../../hooks/useFetchMovieDetails'
 import { useSelector } from 'react-redux';
+import FastImage from 'react-native-fast-image';
 
 const MovieDetails = ({ route, navigation }) => {
     const { movieId } = route.params.movie;
@@ -99,7 +100,7 @@ const MovieDetails = ({ route, navigation }) => {
 
             {/* POSTER AND TRAILER BTN PLAY */}
             <View style={styles.posterContainer}>
-                <Image
+                <FastImage
                     source={{ uri: movie.posterImageLink }}
                     alt={movie.title}
                     style={styles.poster}

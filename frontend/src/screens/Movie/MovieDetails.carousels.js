@@ -1,23 +1,33 @@
-import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, ScrollView, Modal, TouchableOpacity } from 'react-native';
+import React, { useState, useCallback, useMemo } from 'react';
+import { View, Text, StyleSheet, ScrollView, Modal, TouchableOpacity, FlatList } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 export const CastCarousel = ({ cast, directors }) => {
-    const [isRegularCast, setIsRegularCast] = useState(cast ? true : false);
+    const isRegularCast = useMemo(() => cast ? true : false, [cast]);
     const castingList = isRegularCast ? cast : directors;
 
-    if (castingList === undefined) return null;
+    if (!castingList) return null;
 
     return (
-        <ScrollView horizontal style={styles.castContainer}>
-            {castingList.map((actor) => (
-                <View key={actor.actorId} style={styles.actorContainer}>
-                    <Image source={{ uri: actor.portraitImageLink }} style={styles.actorImage} />
-                    <Text style={styles.actorName}>{(actor.name).split(" ").join('\n')}</Text>
+        <FlatList
+            data={castingList}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.castContainer}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => (
+                <View style={styles.actorContainer}>
+                    <FastImage 
+                        source={{ uri: item.portraitImageLink  }} 
+                        style={styles.actorImage}
+                        resizeMode='cover'
+                    />
+                    <Text style={styles.actorName}>{item.name}</Text>
                 </View>
-            ))}
-        </ScrollView>
+            )}
+            />
     );
 };
 
@@ -25,28 +35,33 @@ export const GalleryCarousel = ({ galleryImagesLink }) => {
     const [isVisible, setIsVisible] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
 
-    const handleImagePress = (index) => {
+    const handleImagePress = useCallback((index) => {
         setCurrentIndex(index);
         setIsVisible(true);
-    };
+    }, []);
 
     if (galleryImagesLink === undefined || galleryImagesLink.length === 0) return null;
 
-    const imageUrls = galleryImagesLink.map(image => ({ url: image }));
-
+    const imageUrls = useMemo(() => galleryImagesLink.map(image => ({ url: image.link })), [galleryImagesLink]);
+    
     return (
         <View>
-            <ScrollView horizontal style={styles.galleryContainer}>
-                {galleryImagesLink.map((image, index) => (
-                    <TouchableOpacity key={index} onPress={() => handleImagePress(index)}>
-                        <Image 
-                            source={{ uri: image.link }} 
+            <FlatList
+                data={galleryImagesLink}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.galleryContainer}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item, index }) => (
+                    <TouchableOpacity onPress={() => handleImagePress(index)}>
+                        <FastImage 
+                            source={{ uri: item.link }} 
                             style={styles.galleryImage}
-                            resizeMode='stretch'
+                            resizeMode='cover'
                         />
                     </TouchableOpacity>
-                ))}
-            </ScrollView>
+                )}
+                />
             <Modal visible={isVisible} transparent={true} onRequestClose={() => setIsVisible(false)}>
                 <ImageViewer 
                     imageUrls={imageUrls}

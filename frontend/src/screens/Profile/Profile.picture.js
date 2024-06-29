@@ -12,6 +12,7 @@ import userService from '../../services/userService';
 import ModalPicture from './Modal/ModalPicture';
 
 import {PermissionsAndroid} from 'react-native';
+import FastImage from 'react-native-fast-image';
 
 const ProfilePicture = ({picture_url}) => {
   const [profileImage, setProfileImage] = useState({uri: picture_url});
@@ -116,7 +117,7 @@ const ProfilePicture = ({picture_url}) => {
   return (
     <View style={styles.editPictureContainer}>
       <View style={styles.editPictureContainer.pictureContainer}>
-        <Image
+        <FastImage
           source={{uri: profileImage.uri}}
           style={{width: '100%', height: '100%'}}
         />

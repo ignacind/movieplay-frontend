@@ -1,64 +1,62 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, Image, StyleSheet, Pressable } from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import FavoriteMovie_false from '../../assets/images/favoriteMovie_false.svg';
-import FavoriteMovie_true from '../../assets/images/favoriteMovie_true.svg';
-import RatingStar from '../../assets/images/ratingStar.svg';
+import FastImage from 'react-native-fast-image';
+import RatingStarsInRow from '../../components/RatingStarsInRow';
+import { useNavigation } from '@react-navigation/native';
+import BookmarkButton from '../../components/BookmarkButton';
+import { genreMap_EN_ES as genreMap } from './genreMap';
 
 const SearchMovieCard = React.memo(({ movie }) => {
-  const [isFavorite, setIsFavorite] = React.useState(false);
+  
+  const navigation = useNavigation();
 
   const genresList = movie.genres.map(genre => {
-    return <GenreCard genre={genre.name} key={genre.genreId} />;
+    return <GenreCard genre={genreMap[genre.name]} key={genre.genreId} />;
   });
 
-  const ratingStarsList = [];
   const rate = (movie.rating / 2).toFixed(2);
 
-  for (let i = 1; i <= 5; i++) {
-    ratingStarsList.push(
-      <RatingStar
-        key={i}
-        style={styles.body.ratingStar}
-        fill={i < rate ? '#FFD700' : '#03152D'}
-        width={styles.body.ratingStar.width}
-        height={styles.body.ratingStar.height}
-      />,
-    );
-  }
+  const handlePosterPress = () => {
+    navigation.navigate('MovieDetails', { movie });
+  };
 
   return (
     <View style={styles.container}>
-      <View style={styles.poster.container}>
-        <Image
+      
+      <Pressable // Navigate to MovieDetails
+      style={styles.poster.container} 
+      onPress={handlePosterPress}>
+
+        <FastImage
           source={{ uri: movie.posterImageLink }}
-          alt={movie.title}
           style={styles.poster.image}
           resizeMode="cover"
         />
-      </View>
+
+      </Pressable>
 
       <View style={styles.body.container}>
         <Text style={styles.body.title}>{movie.title}</Text>
         <View style={styles.body.rating.container}>
-          {ratingStarsList}
+
+          <RatingStarsInRow 
+            rate={movie.rating} 
+            width={styles.body.ratingStar.width} 
+            height={styles.body.ratingStar.height}
+            style={styles.body.ratingStar}
+            />
           <Text style={styles.body.rating.text}>{rate}</Text>
         </View>
         <View style={styles.body.genre}>
           {genresList < 3 ? genresList : genresList.slice(0, 3)}
         </View>
-        <Pressable
-          style={styles.body.favorite}
-          onPress={() => setIsFavorite(!isFavorite)}>
-          {!isFavorite ? (
-            <FavoriteMovie_false></FavoriteMovie_false>
-          ) : (
-            <FavoriteMovie_true></FavoriteMovie_true>
-          )}
-        </Pressable>
+        <View style={styles.body.favorite}>
+          <BookmarkButton movieId={movie.movieId}/>
+        </View>
       </View>
     </View>
   );
@@ -140,8 +138,11 @@ const styles = StyleSheet.create({
         fontSize: hp('1.5%'),
       },
     },
-
-    favorite: {},
+    
+    favorite: {
+      width: wp('5%'),
+      alignItems: 'start',
+    },
   },
 });
 

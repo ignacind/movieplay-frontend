@@ -3,6 +3,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Search from '../screens/Search/Search';
 import Login from '../screens/Login/Login';
+import MovieDetails from '../screens/Movie/MovieDetails';
+import BookmarkButton from '../components/BookmarkButton';
 import { TabGroup } from './TabGroup';
 
 const Stack = createNativeStackNavigator();
@@ -31,6 +33,24 @@ export const MainStack = () => {
           },
           headerTintColor: '#FAFAFA',
         }}
+      />
+      <Stack.Screen
+        name="MovieDetails"
+        component={MovieDetails}
+        options={({ route }) => ({
+          headerTitle: '',
+          headerStyle: {
+            backgroundColor: '#192941',
+          },
+          headerTintColor: '#FAFAFA',
+          headerRight: () => {
+            return (
+          <BookmarkButton 
+            movieId={route.params.movie.movieId} 
+            />
+            )
+          }
+        })}
       />
     </Stack.Navigator>
   );

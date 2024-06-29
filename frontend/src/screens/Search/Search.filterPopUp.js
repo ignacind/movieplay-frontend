@@ -17,6 +17,7 @@ import {
 
 import Order_asc from '../../assets/images/order_asc.svg';
 import Order_desc from '../../assets/images/order_desc.svg';
+import { genreMap_ES_EN as genreMap } from './genreMap';
 
 const FilterPopup = ({
   visible,
@@ -29,29 +30,8 @@ const FilterPopup = ({
   selectedOrderASC,
   setSelectedOrderASC,
 }) => {
-  const genreMap = {
-    Acción: 'Action',
-    Animación: 'Animation',
-    Biografía: 'Biography',
-    'Cine de autor': 'Art Cinema',
 
-    Comedia: 'Comedy',
-    Crimen: 'Crime',
-    Deportes: 'Sports',
-    Documental: 'Documentary',
-    Drama: 'Drama',
-    Familiar: 'Family',
-    Fantasía: 'Fantasy',
-    'Film Noir': 'Film Noir',
-    Guerra: 'War',
-    Histórica: 'Historical',
-    Misterio: 'Mystery',
-    Musical: 'Musical',
-    Thriller: 'Thriller',
-    Romance: 'Romance',
-    Suspenso: 'Suspense',
-    Western: 'Western',
-  };
+
   const orderOptions = [
     {label: 'Año de publicación', value: 'DATE'},
     {label: 'Calificación', value: 'RATING'},

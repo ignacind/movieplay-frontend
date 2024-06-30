@@ -1,42 +1,49 @@
-import React from 'react';
-import { View, Text, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, Text, FlatList, StyleSheet, ActivityIndicator, Pressable } from 'react-native';
 import FastImage from 'react-native-fast-image';
+import useFetchJustReleased from '../../hooks/useFetchJustReleased';
+import LoadingPage from '../../components/LoadingPage';
+import { useNavigation } from '@react-navigation/native';
+import { styles } from './Home.styles';
 
-const JustReleased = ({ movies, fetchMore, isFetchingMore, hasMore }) => {
+const JustReleased = () => {
+    const navigation = useNavigation();
 
-  const renderItem = ({ item }) => (
-    <View style={styles.movieRow}>
-      {item.map((movie) => (
-        <FastImage key={movie.movieId} source={{uri: movie.posterImageLink}} />
-      ))}
-    </View>
-  );
+    const { moviesReleasedList, loading, setPage, isFetchingMore, hasMore, handleLoadMore, fetchJustReleased } = useFetchJustReleased();
 
-  const renderFooter = () => {
-    return isFetchingMore ? <ActivityIndicator size="large" color="#0000ff" /> : null;
-  };
+    
+    const handlePosterPress = (movie) => {
+        navigation.navigate('MovieDetails', { movie });
+    }
+
+
+    if (moviesReleasedList === undefined || moviesReleasedList.length === 0) {
+        return <LoadingPage size='small' />;
+    }
 
   return (
     <View>
       <FlatList
-        data={movies}
-        renderItem={renderItem}
+        showsVerticalScrollIndicator={false} 
+        scrollEnabled={false}
+        data={moviesReleasedList}
+        renderItem={({ item }) => {
+            return (
+            <Pressable style={styles.movieRow} onPress={() => handlePosterPress(item)}>
+                <FastImage key={item.movieId} source={{uri: item.posterImageLink}} style={styles.moviePoster} />
+            </Pressable>
+            )
+        }}
         keyExtractor={(item, index) => index.toString()}
-        onEndReached={hasMore ? fetchMore : null}
+        onEndReached={handleLoadMore}
+        windowSize={10}
         onEndReachedThreshold={0.5}
-        ListFooterComponent={renderFooter}
+        numColumns={2}
+        ListFooterComponent={loading && hasMore ? <LoadingPage size='small' /> : null}
       />
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-
-  movieRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 10,
-  },
-});
 
 export default JustReleased;

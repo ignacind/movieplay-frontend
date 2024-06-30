@@ -9,20 +9,15 @@ import JustReleased from './Home.justReleased';
 
 export default function Home() {
   const userId = useSelector(state => state.user.userId);
-  const { moviesMap, loading, justReleased, setPage, isFetchingMore, hasMore } = useFetchHome(userId);
-
-  const handleLoadMore = () => {
-    if (!isFetchingMore) {
-      setPage(prevPage => prevPage + 1);
-    }
-  };
+  const { moviesMap, loading } = useFetchHome(userId);
 
   if (loading || moviesMap === undefined) {
     return <LoadingPage />;
   }
 
+
   return (
-    <ScrollView style={styles.defaultContainer}>
+    <ScrollView style={styles.defaultContainer} showsVerticalScrollIndicator={false}>
       <View style={styles.bigMoviesContainer}>
         <BigMovieCarousel bigMovies={moviesMap.bigMovies} />
       </View>
@@ -39,12 +34,7 @@ export default function Home() {
 
       <View style={styles.justReleasedContainer}>
         <Text style={styles.justReleasedTitle}>Recién lanzados</Text>
-        {/* <JustReleased
-          movies={justReleased}
-          fetchMore={handleLoadMore}
-          isFetchingMore={isFetchingMore}
-          hasMore={hasMore}
-        /> */}
+        <JustReleased />
       </View>
     </ScrollView>
   );

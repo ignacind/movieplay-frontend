@@ -29,7 +29,22 @@ export const styles =  StyleSheet.create({
         fontSize: wp('9%'),
         color: '#DFDFDF',
         fontWeight: 'bold',
-        marginBottom: hp('1%'),
+        marginBottom: hp('2%'),
         
     },
+
+
+    movieRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: hp('2%'),
+      },
+
+      moviePoster: {
+        width: wp('38.5%'),
+        height: hp('26%'),
+        marginHorizontal: wp('2.5%'),
+        borderRadius: 6,
+        elevation: 5,
+      },
 });

@@ -47,7 +47,18 @@ const movieService = {
     } catch(error) {
       console.error(error)
     }
+  },
+
+  getJustReleased: async (page = 0, size = 10) => {
+    try {
+      const response = await api.get(endpoints.movie.getNewReleases(page, size));
+
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
   }
+
   
 };
 

@@ -35,7 +35,7 @@ const useSearchMovies = (searchInput, userId, orderByMethod, selectedGenres, sel
     setIsLoading(true);
     setSearchAttempted(true);
 
-    console.log("fetching page", page)
+    console.log("fetching page search", page)
     try {
       const response = await movieService.searchMovies(
         textInputValue.trimStart(),

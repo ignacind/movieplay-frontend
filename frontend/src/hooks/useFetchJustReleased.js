@@ -7,13 +7,12 @@ const useFetchJustReleased = (userId) => {
     const [moviesReleasedList, setMoviesReleasedList] = useState([]);
     const [page, setPage] = useState(0);
     const [hasMore, setHasMore] = useState(true);
-    const [isFetchingMore, setIsFetchingMore] = useState(false);
 
 
     const fetchJustReleased = useCallback(async () => {
-        if (isFetchingMore || !hasMore) return;
-        setIsFetchingMore(true);
-        console.log("fetching page", page)
+        console.log("ENTER fetchJustReleased");
+        if (!hasMore) return;
+        console.log("fetching page home", page);
         try {
             const response = await movieService.getJustReleased(page, 10);
             if (response && response.movies) {
@@ -23,22 +22,22 @@ const useFetchJustReleased = (userId) => {
             } else {
                 setHasMore(false);
             }
-            setIsFetchingMore(false);
         } catch (error) {
             console.log(error);
-            setIsFetchingMore(false);
+        } finally {
+            // setLoading(false);
         }
-    }, [page, isFetchingMore, hasMore]);
-
+    }, [page, hasMore]);
 
 
     const handleLoadMore = () => {
-        if (hasMore && !loading && !isFetchingMore) {
+        console.log("ENTER handleLoadMore");
+        if (hasMore && !loading) {
             fetchJustReleased();
         }
     };
 
-    return {  moviesReleasedList, loading, setPage, isFetchingMore, hasMore, handleLoadMore, fetchJustReleased };
+    return {  moviesReleasedList, loading, setPage, hasMore, handleLoadMore, fetchJustReleased };
 }
 
 export default useFetchJustReleased;

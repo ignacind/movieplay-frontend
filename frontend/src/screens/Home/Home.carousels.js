@@ -1,13 +1,15 @@
 // Home.carousels.js
 import React from 'react';
 import FastImage from 'react-native-fast-image';
-import { Text, View, StyleSheet, FlatList, Image } from 'react-native';
+import { Text, View, StyleSheet, FlatList, Image, Pressable } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { useNavigation } from '@react-navigation/native';
 import LoadingPage from '../../components/LoadingPage';
 import { genreMap_EN_ES as genreMap } from '../Search/genreMap';
 
 
 export const TopicMoviesCarousel = ({ data }) => {
+  const navigation = useNavigation();
 
   return (
     <View style={styles.topicCarouselContainer}>
@@ -19,13 +21,16 @@ export const TopicMoviesCarousel = ({ data }) => {
       contentContainerStyle={styles.topicContainer}
       keyExtractor={(item, index) => index.toString()}
       renderItem={({ item }) => (
-          <View style={styles.movieContainer}>
+          <Pressable 
+            style={styles.movieContainer}
+            onPress={() => navigation.navigate('MovieDetails', { movie: item })}
+            >
               <FastImage 
                   source={{ uri: item.posterImageLink  }} 
                   style={styles.moviePoster}
                   resizeMode='cover'
               />
-          </View>
+          </Pressable>
       )}
       />
       </View>
@@ -34,21 +39,8 @@ export const TopicMoviesCarousel = ({ data }) => {
         
 
 
-const CarouselItem = ({ title, image }) => {
-  return (
-    <View style={styles.carouselItemContainer}>
-      <Image
-        source={{ uri: image }}
-        style={styles.image}
-      />
-      {/* <Text numberOfLines={1} style={styles.carouselMovieTitle}>
-        {title.length < 30 ? title : `${title.substring(0, 25)}...`}
-      </Text> */}
-    </View>
-  );
-};
-
 export const BigMovieCarousel = ({ bigMovies }) => {
+  const navigation = useNavigation();
   const [activeIndex, setActiveIndex] = React.useState(0);
 
   const handleScroll = (event) => {
@@ -62,13 +54,19 @@ export const BigMovieCarousel = ({ bigMovies }) => {
       <FlatList
         data={bigMovies.moviesData}
         renderItem={({ item }) => (
-          <CarouselItem title={item.title} image={item.posterImageLink} />
+          <Pressable style={styles.carouselItemContainer} 
+          onPress={() => navigation.navigate('MovieDetails', { movie: item })} >
+            <Image
+              source={{ uri: item.posterImageLink }}
+              style={styles.bigMoviePoster}
+            />
+            </Pressable>
         )}
         keyExtractor={item => item.movieId}
         horizontal
         pagingEnabled
-        ItemSeparatorComponent={() => <View style={{ width: 40 }} />}
-        contentContainerStyle={{ paddingRight: 22, paddingLeft: 22 }}
+        ItemSeparatorComponent={() => <View style={{ width: wp('9.5%') }} />}
+        contentContainerStyle={{ paddingHorizontal: wp('5%') }}
         bounces={false}
         showsHorizontalScrollIndicator={false}
         onScroll={handleScroll}
@@ -125,12 +123,14 @@ const styles = StyleSheet.create({
   },
   carouselItemContainer: {
     alignItems: 'center',
+    elevation: 10,
   },
-  image: {
+  bigMoviePoster: {
     borderRadius: 50,
     resizeMode: 'cover',
     width: wp('90%'),
     height: hp('65%'),
+    elevation: 5,
   },
   carouselMovieTitle: {
     fontFamily: 'Inter-SemiBold',
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#A0153E',
     width: wp('6.7%'),
     height: hp('3.3%'),
-    // borderWidth: 2,
-    // borderColor: '#FAFAFA',
+    borderWidth: 2,
+    borderColor: '#D51D53',
   },
 });

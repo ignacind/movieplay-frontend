@@ -9,17 +9,22 @@ import { styles } from './Home.styles';
 const JustReleased = () => {
     const navigation = useNavigation();
 
-    const { moviesReleasedList, loading, setPage, isFetchingMore, hasMore, handleLoadMore, fetchJustReleased } = useFetchJustReleased();
-
+    const { moviesReleasedList, loading, setPage, hasMore, handleLoadMore, fetchJustReleased } = useFetchJustReleased();
     
     const handlePosterPress = (movie) => {
         navigation.navigate('MovieDetails', { movie });
     }
 
+    useEffect(() => {
+        fetchJustReleased();
+    }, []);
+
 
     if (moviesReleasedList === undefined || moviesReleasedList.length === 0) {
         return <LoadingPage size='small' />;
     }
+
+
 
   return (
     <View>
@@ -40,6 +45,8 @@ const JustReleased = () => {
         onEndReachedThreshold={0.5}
         numColumns={2}
         ListFooterComponent={loading && hasMore ? <LoadingPage size='small' /> : null}
+        initialNumToRender={10}
+        removeClippedSubviews={true}
       />
     </View>
   );

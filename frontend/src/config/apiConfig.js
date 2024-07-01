@@ -34,7 +34,7 @@ const endpoints = {
   user: {
     removeMovieFromFavorites: (userId, movieId) => `${API_VERSION}/users/${userId}/movies/${movieId}`,
     getUserData: userId => `${API_VERSION}/users/${userId}`,
-    getFavoriteMovies: userId => `${API_VERSION}/users/${userId}/favorites`,
+    getUserFavorites: (userId, page, size) => `${API_VERSION}/users/${userId}/favorites?pageNumber=${page}&ammountPerPage=${size}`,
     addMovieToFavorites: (userId, movieId) => `${API_VERSION}/users/${userId}/movies/${movieId}`,
     changeNickname: userId => `${API_VERSION}/users/${userId}/nickname`,
     changeProfilePicture: userId => `${API_VERSION}/users/${userId}/images`,

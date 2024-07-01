@@ -2,6 +2,7 @@ import { useState } from "react";
 import userService from "../services/userService";
 import { useDispatch } from "react-redux";
 import { changeStateFavorite } from "../redux/slices/tempFavoritesSlice";
+
 const useHandleFavorites = (userId) => {
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();

@@ -7,18 +7,15 @@ import useHandleFavorites from '../hooks/useHandleFavorites';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
-const BookmarkButton = ({ movieId, isNormalBookMark = true }) => {
+const BookmarkButton = ({ movie, isNormalBookMark = true }) => {
   const userId = useSelector(state => state.user.userId);
-  const favorites = useSelector(state => state.tempFavorites.favorites);
+  const favorites = useSelector(state => state.favorites.favorites);
   const { updateFavorite } = useHandleFavorites(userId);
-  const [isFavorite, setIsFavorite] = useState(favorites[movieId]);
+  const [isFavorite, setIsFavorite] = useState(favorites[movie.movieId] === undefined ? false : true);
 
-  if (isFavorite === null) {
-    setIsFavorite(true)
-  }
 
   const handleBookmarkPress = async () => {
-    const responseOk = await (updateFavorite(movieId, !isFavorite))
+    const responseOk = await (updateFavorite(movie, !isFavorite))
     if (!responseOk) return;
     setIsFavorite(!isFavorite);
   };

@@ -73,7 +73,7 @@ const userService = {
     }
   },
 
-  getUserFavorites: async (userId, page = 0, size = 8) => {
+  getUserFavorites: async (userId, page = 0, size = 25) => {
     try {
       const response = await api.get(endpoints.user.getUserFavorites(userId, page, size));
       return response.data;

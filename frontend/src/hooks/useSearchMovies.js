@@ -1,10 +1,7 @@
 import { useState } from 'react';
 import movieService from '../services/moviesService';
-import { addResponseMovieListToFavorite } from '../redux/slices/tempFavoritesSlice';
-import { useDispatch, useSelector } from 'react-redux';
 
 const useSearchMovies = (searchInput, userId, orderByMethod, selectedGenres, selectedOrderASC) => {
-  const dispatch = useDispatch();
 
   const [movieData, setMovieData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -50,8 +47,6 @@ const useSearchMovies = (searchInput, userId, orderByMethod, selectedGenres, sel
         setMovieData(newSearch ? filteredMovies : [...movieData, ...filteredMovies]);
         setPage(newSearch ? 0 : page + 1);
         setHasMore(response.movies.length > 0);
-        dispatch(addResponseMovieListToFavorite(filteredMovies));
-    
 
       } else {
         setHasMore(false);

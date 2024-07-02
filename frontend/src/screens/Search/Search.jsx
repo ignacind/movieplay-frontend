@@ -26,7 +26,7 @@ export default function Search({ navigation }) {
   const amountOfMoviesToGet = 8;
   const inputRef = useRef();
   const userId = useSelector(state => state.user.userId)
-  const favorites = useSelector(state => state.tempFavorites.favorites)
+  const favorites = useSelector(state => state.favorites.favorites)
 
 
   const { movieData,

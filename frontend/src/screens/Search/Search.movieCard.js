@@ -55,7 +55,7 @@ const SearchMovieCard = React.memo(({ movie }) => {
           {genresList < 3 ? genresList : genresList.slice(0, 3)}
         </View>
         <View style={styles.body.favorite}>
-          <BookmarkButton movieId={movie.movieId}/>
+          <BookmarkButton movie={movie}/>
         </View>
       </View>
     </View>

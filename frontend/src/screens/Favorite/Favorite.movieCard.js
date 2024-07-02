@@ -17,7 +17,7 @@ const FavoriteMovieCard = ({ movie }) => {
                 resizeMode="cover"
                 />
             <View style={styles.closeIcon}>
-                <BookmarkButton movieId={movie.movieId} isNormalBookMark={false} />
+                <BookmarkButton movie={movie} isNormalBookMark={false} />
             </View>
         </Pressable>
     );

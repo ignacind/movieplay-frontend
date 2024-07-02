@@ -57,8 +57,7 @@ const MovieDetails = ({ route, navigation }) => {
     ""
   );
 
-  let thumbnailURL =
-    "https://img.youtube.com/vi/" + youtubeVideoId + "/maxresdefault.jpg";
+  let thumbnailURL = "https://img.youtube.com/vi/" + youtubeVideoId + "/0.jpg";
 
   const toggleSynopsis = () => {
     setIsSynopsisExpanded(!isSynopsisExpanded);
@@ -137,7 +136,7 @@ const MovieDetails = ({ route, navigation }) => {
           source={{ uri: thumbnailURL }}
           alt={movie.title}
           style={styles.poster}
-          resizeMode="stretch"
+          resizeMode="cover"
         />
         <TouchableOpacity onPress={handlePlayTrailer} style={styles.playButton}>
           <Ionicons
@@ -221,6 +220,8 @@ const MovieDetails = ({ route, navigation }) => {
       </View>
 
       {/* CAROUSELS */}
+
+      {/*Directores*/}
       <View style={styles.carouselsContainer}>
         <View style={styles.carouselsContainer.info}>
           <View style={styles.carouselsContainer.info.title}>
@@ -232,6 +233,7 @@ const MovieDetails = ({ route, navigation }) => {
           <CastCarousel directors={movie.directors} />
         </View>
 
+        {/*Reparto*/}
         <View style={styles.carouselsContainer.info}>
           <View style={styles.carouselsContainer.info.title}>
             <View style={styles.carouselsContainer.info.title.line} />
@@ -242,6 +244,7 @@ const MovieDetails = ({ route, navigation }) => {
           <CastCarousel cast={movie.actors} />
         </View>
 
+        {/*Galeria*/}
         <View style={styles.carouselsContainer.info}>
           <View style={styles.carouselsContainer.info.title}>
             <View style={styles.carouselsContainer.info.title.line} />

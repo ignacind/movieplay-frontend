@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import movieService from '../services/moviesService';
-import { changeStateFavorite } from '../redux/slices/tempFavoritesSlice';
+import { addResponseMovieListToFavorite } from '../redux/slices/tempFavoritesSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
 const useSearchMovies = (searchInput, userId, orderByMethod, selectedGenres, selectedOrderASC) => {
   const dispatch = useDispatch();
-  const favorites = useSelector(state => state.tempFavorites.favorites);
 
   const [movieData, setMovieData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -41,7 +40,7 @@ const useSearchMovies = (searchInput, userId, orderByMethod, selectedGenres, sel
         textInputValue.trimStart(),
         selectedOrderASC ? 'ASC' : 'DESC',
         orderBy,
-        newSearch ? 0 : page,
+        newSearch ? 1 : page,
         amountOfMoviesToGet,
         userId
       );
@@ -49,9 +48,9 @@ const useSearchMovies = (searchInput, userId, orderByMethod, selectedGenres, sel
       if (response && response.movies) {
         const filteredMovies = filterGenres(response.movies, selectedGenres);
         setMovieData(newSearch ? filteredMovies : [...movieData, ...filteredMovies]);
-        setPage(newSearch ? 1 : page + 1);
+        setPage(newSearch ? 0 : page + 1);
         setHasMore(response.movies.length > 0);
-        addResponseMoviesToTempFavorites(filteredMovies);
+        dispatch(addResponseMovieListToFavorite(filteredMovies));
     
 
       } else {
@@ -73,11 +72,6 @@ const useSearchMovies = (searchInput, userId, orderByMethod, selectedGenres, sel
     }
   };
 
-  const addResponseMoviesToTempFavorites =  (movies) => {
-      movies.forEach(movie => {
-        dispatch(changeStateFavorite({ movieId: movie.movieId, isFavorite: movie.isFavorite }));
-      });
-  };
 
   return { movieData, isLoading, hasMore, searchAttempted, page, handleSearch, handleLoadMore };
 };

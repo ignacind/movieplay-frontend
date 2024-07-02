@@ -4,8 +4,9 @@ import FastImage from "react-native-fast-image";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { useNavigation } from "@react-navigation/native";
+import BookmarkButton from "../../components/BookmarkButton";
 
-const FavoriteMovieCard = ({ movie, updateFavorite }) => {
+const FavoriteMovieCard = ({ movie }) => {
     const navigation = useNavigation();
 
     return (
@@ -15,9 +16,9 @@ const FavoriteMovieCard = ({ movie, updateFavorite }) => {
                 style={styles.poster}
                 resizeMode="cover"
                 />
-            <TouchableOpacity style={styles.closeIcon} onPress={() => updateFavorite(movie.movieId, true)}>
-                <Ionicons name="close" size={hp('3.5%')} color={'#fff'} />
-            </TouchableOpacity>
+            <View style={styles.closeIcon}>
+                <BookmarkButton movieId={movie.movieId} isNormalBookMark={false} />
+            </View>
         </Pressable>
     );
 }

@@ -15,6 +15,7 @@ const useHandleFavorites = (userId) => {
             } else {
                 await userService.removeMovieFromFavorites(userId, movieId);
             }
+
             dispatch(changeStateFavorite({ movieId, isFavorite }));
             return true;
         } catch (error) {

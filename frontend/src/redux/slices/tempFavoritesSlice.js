@@ -9,10 +9,16 @@ const tempFavoritesSlice = createSlice({
   reducers: {
     changeStateFavorite: (state, action) => {
       state.favorites[action.payload.movieId] = action.payload.isFavorite;
+    },
+
+    addResponseMovieListToFavorite: (state, action) => {
+      action.payload.forEach(movie => {
+        state.favorites[movie.movieId] = movie.isFavorite === null ? true : movie.isFavorite;
+      });
     }
   }
 
 })
 
-export const { changeStateFavorite } = tempFavoritesSlice.actions;
+export const { changeStateFavorite, addResponseMovieListToFavorite } = tempFavoritesSlice.actions;
 export default tempFavoritesSlice.reducer;

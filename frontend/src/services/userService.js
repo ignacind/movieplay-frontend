@@ -54,6 +54,7 @@ const userService = {
       const response = await api.post(
         endpoints.user.addMovieToFavorites(userId, movieId),
       );
+      
       return response.data;
     } catch (error) {
       console.error('Error adding movie to favorites:', error);
@@ -73,7 +74,7 @@ const userService = {
     }
   },
 
-  getUserFavorites: async (userId, page = 0, size = 25) => {
+  getUserFavorites: async (userId, page = 0, size = 8) => {
     try {
       const response = await api.get(endpoints.user.getUserFavorites(userId, page, size));
       return response.data;

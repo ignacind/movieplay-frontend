@@ -5,7 +5,8 @@ import Pencil from '../../assets/images/editPencil_btn.svg';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import userService from '../../services/userService';
 import store from '../../redux/store';
-import ModalAlert from './Modal/ModalAlert';
+import ModalAlert from '../../components/ModalAlert';
+import { useModal } from '../../context/ModalContext';
 
 const ProfileNickName = ({ initialNickName }) => {
 
@@ -13,8 +14,7 @@ const ProfileNickName = ({ initialNickName }) => {
     const [hasNickNameChanged, setHasNickNameChanged] = useState(false);
     const [oldNickName, setOldNickName] = useState(null);
 
-    const [modalVisible, setModalVisible] = useState(false);
-    const [modalMessage, setModalMessage] = useState({ title: '', message: '' });
+    const { showModal } = useModal();    
 
     const userId = store.getState().user.userId;
     const nicknameInputRef = useRef(null);
@@ -44,8 +44,7 @@ const ProfileNickName = ({ initialNickName }) => {
     };
 
     const handleModalAlert = (title, message) => {
-        setModalMessage({ title: title, message: message });
-        setModalVisible(true);
+        showModal(title, message);
         setNickName(oldNickName);
     }
 
@@ -100,13 +99,6 @@ const ProfileNickName = ({ initialNickName }) => {
                     </TouchableOpacity>
                 }
             </View>
-
-            <ModalAlert
-                visible={modalVisible}
-                onClose={() => setModalVisible(false)}
-                title={modalMessage.title}
-                message={modalMessage.message}
-            />
 
         </View>
     );

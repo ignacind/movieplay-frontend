@@ -11,12 +11,13 @@ const favoritesSlice = createSlice({
   },
   reducers: {
     changeStateFavorite: (state, action) => {
-      const { movie } = action.payload;
-      const { movieId, isFavorite} = movie;
+      const { movie, localFavorite } = action.payload;
+      const { movieId } = movie;
 
-      state.amountFavorites += isFavorite ? 1 : -1;
+      state.amountFavorites += (localFavorite ? 1 : -1);
+      movie.isFavorite = localFavorite
 
-      if (isFavorite) {
+      if (localFavorite) {
         state.favorites[movieId] = movie;
       } else {
         delete state.favorites[movieId]
@@ -27,6 +28,7 @@ const favoritesSlice = createSlice({
       action.payload.forEach(movie => {
         state.favorites[movie.movieId] = movie;
       });
+      state.amountFavorites += action.payload.length;
     }
   }
 

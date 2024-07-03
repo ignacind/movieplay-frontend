@@ -10,7 +10,6 @@ const useFetchJustReleased = (userId) => {
 
 
     const fetchJustReleased = useCallback(async () => {
-        console.log("ENTER fetchJustReleased");
         if (!hasMore) return;
         console.log("fetching page home", page);
         try {

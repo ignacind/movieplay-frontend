@@ -46,7 +46,7 @@ export const MainStack = () => {
           headerRight: () => {
             return (
           <BookmarkButton 
-            movieId={route.params.movie.movieId} 
+            movie={route.params.movie} 
             />
             )
           }

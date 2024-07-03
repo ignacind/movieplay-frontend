@@ -34,7 +34,7 @@ const endpoints = {
   user: {
     removeMovieFromFavorites: (userId, movieId) => `${API_VERSION}/users/${userId}/movies/${movieId}`,
     getUserData: userId => `${API_VERSION}/users/${userId}`,
-    getFavoriteMovies: userId => `${API_VERSION}/users/${userId}/favorites`,
+    getUserFavorites: (userId, page, size) => `${API_VERSION}/users/${userId}/favorites?pageNumber=${page}&ammountPerPage=${size}`,
     addMovieToFavorites: (userId, movieId) => `${API_VERSION}/users/${userId}/movies/${movieId}`,
     changeNickname: userId => `${API_VERSION}/users/${userId}/nickname`,
     changeProfilePicture: userId => `${API_VERSION}/users/${userId}/images`,
@@ -44,7 +44,7 @@ const endpoints = {
     getMovieById: (movieId, userId) => `${API_VERSION}/movies/${movieId}?userId=${userId}`,
     searchMovies: (input, page, size, sort, orderBy, userId) =>
       `${API_VERSION}/movies/search?input=${input}&page=${page}&size=${size}&sort=${sort}&orderBy=${orderBy}&userId=${userId}`,
-    getNewReleases: () => `${API_VERSION}/movies/new`,
+    getNewReleases: (page, size) => `${API_VERSION}/movies/new?page=${page}&size=${size}`,
     rateMovie: (movieId, userId) => `${API_VERSION}/movies/${movieId}/rate/${userId}`,
   },
   auth: {

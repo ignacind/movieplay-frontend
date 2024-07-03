@@ -72,6 +72,18 @@ const userService = {
       throw error;
     }
   },
+
+  getUserFavorites: async (userId, page = 0, size = 25) => {
+    try {
+      const response = await api.get(endpoints.user.getUserFavorites(userId, page, size));
+      return response.data;
+    } catch (error) {
+      console.error('Error getting favorites:', error);
+      throw error;
+    }
+  },
+
+
 };
 
 export default userService;

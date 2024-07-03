@@ -63,6 +63,44 @@ export const ProfileOptions = {
   ),
 };
 
+
+export const FavoriteOptions = {
+  headerTitle: 'MIS FAVORITOS',
+  headerTitleStyle: {
+    color: '#FAFAFA',
+    fontSize: hp('2.75%'),
+    weight: 'medium',
+    letterSpacing: 2,
+    marginLeft: wp('2%'),
+  },
+  headerTitleAlign: 'center',
+  headerStyle: {
+    backgroundColor: '#192941',
+  },
+  headerTintColor: '#FAFAFA',
+
+  headerLeft: () => (
+    <Pressable style={styles.leftHeaderLogo}>
+      <Logo width={styles.logoSize.width} height={styles.logoSize.height} />
+    </Pressable>
+  ),
+  headerRight: () => {
+    const navigation = useNavigation();
+    return (
+      <Pressable
+        style={styles.rightHeader}
+        onPress={() => navigation.navigate('Search')}>
+        <Search
+          width={styles.searchSize.width}
+          height={styles.searchSize.height}
+        />
+      </Pressable>
+    );
+  },
+};
+
+
+
 const styles = StyleSheet.create({
   logoSize: {
     width: wp('12%'),
@@ -90,3 +128,6 @@ const styles = StyleSheet.create({
     height: hp('4.3%'),
   },
 });
+
+
+

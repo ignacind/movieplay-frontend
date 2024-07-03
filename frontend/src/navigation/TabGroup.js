@@ -1,11 +1,11 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { Pressable } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Home from '../screens/Home/Home';
 import Profile from '../screens/Profile/Profile';
-import { HomeOptions, ProfileOptions } from './HeaderOptions';
+import { HomeOptions, ProfileOptions, FavoriteOptions } from './HeaderOptions';
+import Favorite from '../screens/Favorite/Favorite';
 
 
 const Tab = createBottomTabNavigator();
@@ -34,13 +34,15 @@ export const TabGroup = () => {
         },
       })}
     >
-      <Tab.Screen name="Inicio" component={Home} options={HomeOptions} />
+      <Tab.Screen 
+        name="Inicio" 
+        component={Home} 
+        options={HomeOptions} 
+      />
       <Tab.Screen
         name="Favoritos"
-        component={Home}
-        options={{
-          tabBarButton: props => <Pressable {...props} disabled={true} />,
-        }}
+        component={Favorite}
+        options={FavoriteOptions}
       />
       <Tab.Screen
         name="Mi Perfil"

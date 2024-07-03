@@ -1,27 +1,38 @@
 import { useState } from "react";
 import userService from "../services/userService";
-import { useDispatch } from "react-redux";
-import { changeStateFavorite } from "../redux/slices/tempFavoritesSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { changeStateFavorite } from "../redux/slices/favoritesSlice";
+import { Alert } from "react-native";
+
+const FAVORITES_LIMIT = 25;
+
 const useHandleFavorites = (userId) => {
     const [loading, setLoading] = useState(false);
+    const amountFavorites = useSelector(state => state.favorites.amountFavorites);
     const dispatch = useDispatch();
 
-    const updateFavorite = async (movieId, isFavorite) => {
+    const updateFavorite = async (movie, isFavorite) => {
         setLoading(true);
         try {
             if (isFavorite) {
-                await userService.addMovieToFavorites(userId, movieId);
+                if (amountFavorites === FAVORITES_LIMIT) {
+                    Alert.alert("Tienes demasiados favoritos...")
+                    return false;
+                } 
+
+                await userService.addMovieToFavorites(userId, movie.movieId);
+                
             } else {
-                await userService.removeMovieFromFavorites(userId, movieId);
+                await userService.removeMovieFromFavorites(userId, movie.movieId);
             }
-            dispatch(changeStateFavorite({ movieId, isFavorite }));
+
+            dispatch(changeStateFavorite({ movie }));
             return true;
         } catch (error) {
             console.error(error);
             setLoading(false);
             return false;
         }
-        
     };
     
 

@@ -23,28 +23,27 @@ export const styles =  StyleSheet.create({
     justReleasedContainer: {
         marginVertical: hp('2%'),
         alignItems: 'center',
-
     },
+
+
     justReleasedTitle: {
         fontSize: wp('9%'),
         color: '#DFDFDF',
         fontWeight: 'bold',
-        marginBottom: hp('2%'),
+        marginBottom: hp('1.5%'),
         
     },
 
 
     movieRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
         marginBottom: hp('2%'),
       },
 
       moviePoster: {
         width: wp('38.5%'),
         height: hp('26%'),
-        marginHorizontal: wp('2.5%'),
         borderRadius: 6,
         elevation: 5,
+        marginHorizontal: wp('4.5%'),
       },
 });

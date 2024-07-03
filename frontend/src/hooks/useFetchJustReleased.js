@@ -13,6 +13,7 @@ const useFetchJustReleased = (userId) => {
         if (!hasMore) return;
         console.log("fetching page home", page);
         try {
+            setLoading(true);
             const response = await movieService.getJustReleased(page, 10);
             if (response && response.movies) {
                 setMoviesReleasedList((prev) => [...prev, ...response.movies]);
@@ -24,13 +25,13 @@ const useFetchJustReleased = (userId) => {
         } catch (error) {
             console.log(error);
         } finally {
-            // setLoading(false);
+            setLoading(false);
         }
     }, [page, hasMore]);
 
 
     const handleLoadMore = () => {
-        console.log("ENTER handleLoadMore");
+
         if (hasMore && !loading) {
             fetchJustReleased();
         }

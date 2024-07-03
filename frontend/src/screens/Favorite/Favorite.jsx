@@ -13,8 +13,6 @@ const Favorite = () => {
         return Object.values(favorites);
     }, [favorites]);
 
-    console.log("FAVORITES", favorites);
-
 
     return (
         <View style={styles.container}>

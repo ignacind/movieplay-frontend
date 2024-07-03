@@ -6,11 +6,13 @@ import Login from '../screens/Login/Login';
 import MovieDetails from '../screens/Movie/MovieDetails';
 import BookmarkButton from '../components/BookmarkButton';
 import { TabGroup } from './TabGroup';
+import { ModalProvider } from '../context/ModalContext';
 
 const Stack = createNativeStackNavigator();
 
 export const MainStack = () => {
   return (
+    <ModalProvider>
     <Stack.Navigator initialRouteName="TabGroup">
       <Stack.Screen
         name="TabGroup"
@@ -53,6 +55,7 @@ export const MainStack = () => {
         })}
       />
     </Stack.Navigator>
+    </ModalProvider>
   );
 };
 

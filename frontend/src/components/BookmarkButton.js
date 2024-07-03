@@ -10,12 +10,12 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 const BookmarkButton = ({ movie, isNormalBookMark = true }) => {
   const userId = useSelector(state => state.user.userId);
   const favorites = useSelector(state => state.favorites.favorites);
-  const { updateFavorite } = useHandleFavorites(userId);
+  const {  updateFavorite, modalVisible, modalMessage, closeModal  } = useHandleFavorites(userId);
+
   const [isFavorite, setIsFavorite] = useState(favorites[movie.movieId] === undefined ? false : true);
 
-
   const handleBookmarkPress = async () => {
-    const responseOk = await (updateFavorite(movie, !isFavorite))
+    const responseOk = await updateFavorite(movie, !isFavorite)
     if (!responseOk) return;
     setIsFavorite(!isFavorite);
   };

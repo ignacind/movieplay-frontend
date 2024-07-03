@@ -19,8 +19,6 @@ const RatePopUp = ({
   const [rating, setRating] = useState(0);
 
   const handleRatingCompleted = (rating) => {
-    console.log("RATING");
-    console.log(rating);
     setRating(rating);
   };
 

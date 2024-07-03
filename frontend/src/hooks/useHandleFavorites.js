@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { changeStateFavorite } from "../redux/slices/favoritesSlice";
 import { useModal } from '../context/ModalContext';
 
-const FAVORITES_LIMIT = 6;
+const FAVORITES_LIMIT = 30;
 
 const useHandleFavorites = (userId) => {
     const [loading, setLoading] = useState(false);

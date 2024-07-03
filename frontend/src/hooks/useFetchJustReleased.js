@@ -5,7 +5,7 @@ import movieService from "../services/moviesService";
 const useFetchJustReleased = (userId) => {
     const [loading, setLoading] = useState(true);
     const [moviesReleasedList, setMoviesReleasedList] = useState([]);
-    const [page, setPage] = useState(0);
+    const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
 
 
@@ -14,11 +14,11 @@ const useFetchJustReleased = (userId) => {
         console.log("fetching page home", page);
         try {
             setLoading(true);
-            const response = await movieService.getJustReleased(page, 10);
+            const response = await movieService.getJustReleased(page, 8);
             if (response && response.movies) {
                 setMoviesReleasedList((prev) => [...prev, ...response.movies]);
                 setHasMore(response.movies.length > 0);
-                setPage((prevPage) => prevPage + 1);
+                setPage((prevPage) => prevPage + 1 )
             } else {
                 setHasMore(false);
             }
@@ -31,13 +31,12 @@ const useFetchJustReleased = (userId) => {
 
 
     const handleLoadMore = () => {
-
         if (hasMore && !loading) {
             fetchJustReleased();
         }
     };
 
-    return {  moviesReleasedList, loading, setPage, hasMore, handleLoadMore, fetchJustReleased };
+    return {  moviesReleasedList, loading, hasMore, handleLoadMore, fetchJustReleased };
 }
 
 export default useFetchJustReleased;

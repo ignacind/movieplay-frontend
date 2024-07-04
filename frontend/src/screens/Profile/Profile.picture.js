@@ -1,21 +1,21 @@
-import React, { useState } from 'react';
-import {View, Image, TouchableOpacity, StyleSheet} from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
+import React, { useState } from "react";
+import { View, Image, TouchableOpacity, StyleSheet } from "react-native";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { launchImageLibrary, launchCamera } from "react-native-image-picker";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
-} from 'react-native-responsive-screen';
-import Pencil from '../../assets/images/editPencil_btn.svg';
-import store from '../../redux/store';
-import userService from '../../services/userService';
-import ModalPicture from './Modal/ModalPicture';
+} from "react-native-responsive-screen";
+import Pencil from "../../assets/images/editPencil_btn.svg";
+import store from "../../redux/store";
+import userService from "../../services/userService";
+import ModalPicture from "./Modal/ModalPicture";
 
-import {PermissionsAndroid} from 'react-native';
-import FastImage from 'react-native-fast-image';
+import { PermissionsAndroid } from "react-native";
+import FastImage from "react-native-fast-image";
 
-const ProfilePicture = ({picture_url}) => {
-  const [profileImage, setProfileImage] = useState({uri: picture_url});
+const ProfilePicture = ({ picture_url }) => {
+  const [profileImage, setProfileImage] = useState({ uri: picture_url });
   const [oldProfileImage, setOldProfileImage] = useState(null);
   const [hasProfileImageChanged, setHasProfileImageChanged] = useState(false);
 
@@ -27,13 +27,13 @@ const ProfilePicture = ({picture_url}) => {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.CAMERA,
         {
-          title: 'Otorgar permisos de camara para MoviePlay',
+          title: "Otorgar permisos de camara para MoviePlay",
           message:
-            'MoviePlay necesita acceso a tu camara' + 'para tomar fotos.',
-          buttonNeutral: 'Preguntar después',
-          buttonNegative: 'Cancelar',
-          buttonPositive: 'OK',
-        },
+            "MoviePlay necesita acceso a tu camara" + "para tomar fotos.",
+          buttonNeutral: "Preguntar después",
+          buttonNegative: "Cancelar",
+          buttonPositive: "OK",
+        }
       );
       return granted;
     } catch (err) {
@@ -46,14 +46,14 @@ const ProfilePicture = ({picture_url}) => {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
         {
-          title: 'Otorgar permisos de galería para MoviePlay',
+          title: "Otorgar permisos de galería para MoviePlay",
           message:
-            'MoviePlay necesita acceso a tu camara' +
-            'para acceder a la galería.',
-          buttonNeutral: 'Preguntar después',
-          buttonNegative: 'Cancelar',
-          buttonPositive: 'OK',
-        },
+            "MoviePlay necesita acceso a tu camara" +
+            "para acceder a la galería.",
+          buttonNeutral: "Preguntar después",
+          buttonNegative: "Cancelar",
+          buttonPositive: "OK",
+        }
       );
       return granted;
     } catch (err) {
@@ -65,11 +65,11 @@ const ProfilePicture = ({picture_url}) => {
     setModalVisible(true);
   };
 
-  const handleImageResponse = response => {
+  const handleImageResponse = (response) => {
     if (response.didCancel) {
-      console.log('User cancelled');
+      console.log("User cancelled");
     } else if (response.errorCode) {
-      console.log('Error: ', response.errorMessage);
+      console.log("Error: ", response.errorMessage);
     } else {
       setProfileImage(response.assets[0]);
       setOldProfileImage(profileImage);
@@ -77,10 +77,10 @@ const ProfilePicture = ({picture_url}) => {
     }
   };
 
-  const handleLaunchProfile = async isGallery => {
+  const handleLaunchProfile = async (isGallery) => {
     const options = {
-      mediaType: 'photo',
-      quality: 1,
+      mediaType: "photo",
+      quality: 0.2,
       includeBase64: false,
     };
     if (isGallery) {
@@ -118,29 +118,31 @@ const ProfilePicture = ({picture_url}) => {
     <View style={styles.editPictureContainer}>
       <View style={styles.editPictureContainer.pictureContainer}>
         <FastImage
-          source={{uri: profileImage.uri}}
-          style={{width: '100%', height: '100%'}}
+          source={{ uri: profileImage.uri }}
+          style={{ width: "100%", height: "100%" }}
         />
       </View>
       <TouchableOpacity
         style={[
           styles.editPictureContainer.editPencil,
-          hasProfileImageChanged && {backgroundColor: '#3B5780'},
+          hasProfileImageChanged && { backgroundColor: "#3B5780" },
         ]}
         onPress={
           !hasProfileImageChanged ? handleProfileImageEdit : saveProfileImage
-        }>
+        }
+      >
         {!hasProfileImageChanged ? (
           <Pencil />
         ) : (
-          <Ionicons name="save" size={hp('2.5%')} color="#FAFAFA" />
+          <Ionicons name="save" size={hp("2.5%")} color="#FAFAFA" />
         )}
       </TouchableOpacity>
       {hasProfileImageChanged && (
         <TouchableOpacity
           style={styles.editPictureContainer.cancelEditPicture}
-          onPress={handleCancelEditPicture}>
-          <Ionicons name="close" size={hp('2.5%')} color="#FAFAFA" />
+          onPress={handleCancelEditPicture}
+        >
+          <Ionicons name="close" size={hp("2.5%")} color="#FAFAFA" />
         </TouchableOpacity>
       )}
       <ModalPicture
@@ -161,30 +163,30 @@ const ProfilePicture = ({picture_url}) => {
 
 const styles = StyleSheet.create({
   editPictureContainer: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "space-between",
     pictureContainer: {
-      width: wp('50%'),
-      height: wp('50%'),
+      width: wp("50%"),
+      height: wp("50%"),
       borderRadius: 100,
-      overflow: 'hidden',
-      marginTop: hp('4.25%'),
+      overflow: "hidden",
+      marginTop: hp("4.25%"),
     },
     editPencil: {
-      position: 'absolute',
+      position: "absolute",
       bottom: 0,
       right: 0,
-      padding: hp('1.5%'),
-      backgroundColor: '#EBE205',
+      padding: hp("1.5%"),
+      backgroundColor: "#EBE205",
       borderRadius: 100,
     },
     cancelEditPicture: {
-      position: 'absolute',
+      position: "absolute",
       bottom: 0,
       left: 0,
-      padding: hp('1.5%'),
-      backgroundColor: '#D51D53',
+      padding: hp("1.5%"),
+      backgroundColor: "#D51D53",
       borderRadius: 100,
     },
   },

@@ -32,11 +32,10 @@ const useSearchMovies = (
       return;
     }
 
-    setFirstSearch(newSearch);
-
     const orderBy = orderByMethod || "DATE";
 
     setIsLoading(true);
+    setFirstSearch(newSearch);
     setSearchAttempted(true);
 
     console.log("fetching page search", page);
@@ -45,7 +44,7 @@ const useSearchMovies = (
         textInputValue.trimStart(),
         selectedOrderASC ? "ASC" : "DESC",
         orderBy,
-        newSearch ? 1 : page,
+        newSearch ? 0 : page,
         amountOfMoviesToGet,
         userId
       );
@@ -55,7 +54,7 @@ const useSearchMovies = (
         setMovieData(
           newSearch ? filteredMovies : [...movieData, ...filteredMovies]
         );
-        setPage(newSearch ? 0 : page + 1);
+        setPage(newSearch ? 1 : page + 1);
         setHasMore(response.movies.length > 0);
       } else {
         setHasMore(false);

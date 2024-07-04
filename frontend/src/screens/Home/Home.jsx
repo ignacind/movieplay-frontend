@@ -6,6 +6,7 @@ import useFetchHome from '../../hooks/useFetchHome';
 import { useSelector } from 'react-redux';
 import { styles } from './Home.styles';
 import JustReleased from './Home.justReleased';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Home() {
   const userId = useSelector(state => state.user.userId);
@@ -16,26 +17,35 @@ export default function Home() {
   }
 
 
+  const FlatListHeader = () => {
+    return (
+      <View>
+        <View style={styles.bigMoviesContainer}>
+          <BigMovieCarousel bigMovies={moviesMap.bigMovies} />
+        </View>
+
+        <View style={styles.separatorLine} />
+
+        <View style={styles.topicMoviesContainer}>
+          <TopicMoviesCarousel data={moviesMap.firstSidescroll} />
+          <TopicMoviesCarousel data={moviesMap.secondSidescroll} />
+          <TopicMoviesCarousel data={moviesMap.thirdSidescroll} />
+        </View>
+
+        <View style={{ ...styles.separatorLine, height: 1 }} />
+
+      </View>
+    )
+  }
+
+
   return (
-    <ScrollView style={styles.defaultContainer} showsVerticalScrollIndicator={false}>
-      <View style={styles.bigMoviesContainer}>
-        <BigMovieCarousel bigMovies={moviesMap.bigMovies} />
-      </View>
+    <SafeAreaView style={styles.defaultContainer}>
+      <JustReleased FlatListHeader={FlatListHeader} />
+    </SafeAreaView>
+  )
 
-      <View style={styles.separatorLine} />
-
-      <View style={styles.topicMoviesContainer}>
-        <TopicMoviesCarousel data={moviesMap.firstSidescroll} />
-        <TopicMoviesCarousel data={moviesMap.secondSidescroll} />
-        <TopicMoviesCarousel data={moviesMap.thirdSidescroll} />
-      </View>
-
-      <View style={{ ...styles.separatorLine, height: 1 }} />
-
-      <View style={styles.justReleasedContainer}>
-        <Text style={styles.justReleasedTitle}>Recién lanzados</Text>
-        <JustReleased />
-      </View>
-    </ScrollView>
-  );
 }
+
+
+

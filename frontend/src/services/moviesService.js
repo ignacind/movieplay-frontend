@@ -49,7 +49,7 @@ const movieService = {
     }
   },
 
-  getJustReleased: async (page = 0, size = 10) => {
+  getJustReleased: async (page = 1, size = 8) => {
     try {
       const response = await api.get(endpoints.movie.getNewReleases(page, size));
 

@@ -51,7 +51,7 @@ const MovieDetails = ({ route, navigation }) => {
 
   const rate = (movie.rating / 2).toFixed(2);
 
-  let youtubeLink = movie.trailerLink;
+  let youtubeLink = movie.trailerLink ? movie.trailerLink : "";
   let youtubeVideoId = youtubeLink.replace(
     "https://www.youtube.com/watch?v=",
     ""
@@ -206,8 +206,8 @@ const MovieDetails = ({ route, navigation }) => {
               {userRate !== 0
                 ? userRate
                 : movie.userRating !== 0
-                ? movie.userRating / 2
-                : "(?)"}
+                  ? movie.userRating / 2
+                  : "(?)"}
             </Text>
           }
         </View>

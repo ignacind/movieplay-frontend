@@ -92,8 +92,9 @@ export const GalleryCarousel = ({ galleryImagesLink }) => {
           loadingRender={() => <GalleryLoadingImage />}
           enableSwipeDown={true}
           saveToLocalByLongPress={false}
-          enableImageZoom={false}
+          enableImageZoom={true}
           flipThreshold={120}
+          maxScale={3}
         />
       </Modal>
     </View>

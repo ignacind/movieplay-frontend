@@ -32,6 +32,7 @@ export default function Search({ navigation }) {
     hasMore,
     searchAttempted,
     page,
+    previousInput,
     handleSearch,
     handleLoadMore,
   } = useSearchMovies(
@@ -93,7 +94,7 @@ export default function Search({ navigation }) {
           }
         />
       ) : searchAttempted ? (
-        <RenderNoResults textSearched={searchInput} />
+        <RenderNoResults textSearched={previousInput} />
       ) : (
         <RenderNoSearch />
       )}

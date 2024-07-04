@@ -14,6 +14,7 @@ const useSearchMovies = (
   const [hasMore, setHasMore] = useState(true);
   const [searchAttempted, setSearchAttempted] = useState(false);
   const [page, setPage] = useState(0);
+  const [previousInput, setPreviousInput] = useState("");
 
   const amountOfMoviesToGet = 8;
 
@@ -31,6 +32,8 @@ const useSearchMovies = (
     if (textInputValue === "" || textInputValue.trim().length === 0) {
       return;
     }
+
+    setPreviousInput(searchInput);
 
     const orderBy = orderByMethod || "DATE";
 
@@ -80,6 +83,7 @@ const useSearchMovies = (
     hasMore,
     searchAttempted,
     page,
+    previousInput,
     handleSearch,
     handleLoadMore,
   };

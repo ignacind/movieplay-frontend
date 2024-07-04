@@ -91,6 +91,7 @@ export const GalleryCarousel = ({ galleryImagesLink }) => {
           useNativeDriver={true}
           loadingRender={() => <GalleryLoadingImage />}
           enableSwipeDown={true}
+          saveToLocalByLongPress={false}
           enableImageZoom={false}
           flipThreshold={120}
         />

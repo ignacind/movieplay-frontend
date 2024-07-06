@@ -37,7 +37,7 @@ const Navigation = () => {
     };
 
     checkTokens();
-  }, [dispatch]);
+  }, []);
 
   if (isAuthenticated === undefined) {
     return <LoadingPage />;

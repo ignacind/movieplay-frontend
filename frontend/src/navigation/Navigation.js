@@ -1,47 +1,26 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import { useDispatch, useSelector } from "react-redux";
-import { View, StyleSheet, Pressable } from "react-native";
-import { getTokens, getUserId } from "../services/storageService";
-import { login, logout } from "../redux/slices/authSlice";
+import { useSelector } from "react-redux";
+import { View, StyleSheet } from "react-native";
 import ErrorScreen from "../screens/Error/ErrorScreen";
 import LoadingPage from "../components/LoadingPage";
-import { clearUserId, setUserId } from "../redux/slices/userSlice";
 import { AuthStack, MainStack } from "./Stack";
+import useLogin from "../hooks/useLogin";
 
 const Navigation = () => {
+  const { handleAutoLogin } = useLogin();
+  const [isLogged, setIsLogged] = useState(undefined);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const error = useSelector((state) => state.error.error);
-  const dispatch = useDispatch();
 
   useEffect(() => {
-    const checkTokens = async () => {
-      const { accessToken, refreshToken } = await getTokens();
-      const userId = await getUserId();
-      console.log("accessToken: " + accessToken);
-      console.log("refreshToken: " + refreshToken);
-      console.log("userId: " + userId);
-      if (accessToken && refreshToken && userId) {
-        dispatch(
-          login({
-            accessToken: accessToken,
-            refreshToken: refreshToken,
-            isAuthenticated: true,
-          })
-        );
-        dispatch(setUserId(userId));
-      } else {
-        dispatch(logout());
-        dispatch(clearUserId());
-      }
+    const checkLogin = async () => {
+      const result = await handleAutoLogin();
+      setIsLogged(result);
     };
-
-    checkTokens();
+    checkLogin();
   }, []);
 
-  if (isAuthenticated === undefined) {
-    return <LoadingPage />;
-  }
 
   return (
     <View style={styles.container}>
@@ -58,6 +37,7 @@ const Navigation = () => {
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {

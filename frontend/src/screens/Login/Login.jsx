@@ -4,10 +4,10 @@ import { TouchableOpacity, Text, View } from 'react-native';
 import Logo from '../../assets/images/logo.svg';
 import GoogleLogo from '../../assets/images/login_btnGoogle.svg';
 import { styles } from './Login.styles';
-import useGoogleLogin from '../../hooks/useLogin';
+import useLogin from '../../hooks/useLogin';
 
 export default function Login({ navigation }) {
-  const { onGoogleButtonPress } = useGoogleLogin();
+  const { onGoogleButtonPress } = useLogin();
 
   return (
     <View style={styles.container}>

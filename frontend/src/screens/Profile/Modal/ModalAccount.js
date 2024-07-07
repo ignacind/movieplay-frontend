@@ -19,6 +19,7 @@ import authService from "../../../services/authService";
 import store from "../../../redux/store";
 import { clearUser } from "../../../redux/slices/userSlice";
 import { removeTokens } from "../../../services/storageService";
+import { GOOGLE_CLIENT_ID } from "@env";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
 export default function ModalAccount({
@@ -56,6 +57,15 @@ export default function ModalAccount({
         const response = await authService.deleteUser(userId);
       } else {
         const response = await authService.logout(userId);
+      }
+
+      try {
+        GoogleSignin.configure({
+          webClientId: `${GOOGLE_CLIENT_ID}.apps.googleusercontent.com`,
+        });
+        await GoogleSignin.hasPlayServices();
+      } catch (googleError) {
+        console.log(googleError);
       }
 
       await GoogleSignin.revokeAccess();

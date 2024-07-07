@@ -1,5 +1,6 @@
-import {api, endpoints} from '../config/apiConfig';
-import * as Keychain from 'react-native-keychain';
+import { api, endpoints } from "../config/apiConfig";
+import * as Keychain from "react-native-keychain";
+import { removeTokens, removeUserId } from "./storageService";
 
 const authService = {
   signIn: async (email, realName, photo) => {
@@ -9,21 +10,22 @@ const authService = {
         realName: realName,
         profilePictureLink: photo,
       });
-      const {accessToken, refreshToken} = response.data;
+      const { accessToken, refreshToken } = response.data;
 
       await Keychain.setGenericPassword(accessToken, refreshToken);
       return response.data;
-      
     } catch (error) {
       console.error(error);
       throw error;
     }
   },
 
-  logout: async userId => {
+  logout: async (userId) => {
     try {
       const response = await api.delete(endpoints.auth.logout(userId));
       await Keychain.resetGenericPassword();
+      await removeTokens();
+      await removeUserId();
       return response.data;
     } catch (error) {
       console.error(error);
@@ -31,10 +33,12 @@ const authService = {
     }
   },
 
-  deleteUser: async userId => {
+  deleteUser: async (userId) => {
     try {
       const response = await api.delete(endpoints.auth.deleteUser(userId));
       await Keychain.resetGenericPassword();
+      await removeTokens();
+      await removeUserId();
       return response.data;
     } catch (error) {
       console.error(error);
@@ -45,9 +49,11 @@ const authService = {
   refreshToken: async (userId, accessToken, refreshToken) => {
     try {
       const response = await api.post(endpoints.auth.refreshToken(), {
-        userId, accessToken, refreshToken,
+        userId,
+        accessToken,
+        refreshToken,
       });
-      const {accessToken, newRefreshToken} = response.data;
+      const { accessToken, newRefreshToken } = response.data;
 
       await Keychain.setGenericPassword(accessToken, newRefreshToken);
       return response.data;

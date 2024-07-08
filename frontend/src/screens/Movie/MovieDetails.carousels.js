@@ -36,7 +36,9 @@ export const CastCarousel = ({ cast, directors }) => {
             style={styles.actorImage}
             resizeMode="cover"
           />
-          <Text style={styles.actorName}>{item.name}</Text>
+          <Text style={styles.actorName} numberOfLines={3}>
+            {item.name}
+          </Text>
         </View>
       )}
     />
@@ -107,6 +109,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: wp("3%"),
   },
   actorContainer: {
+    width: wp("23%"),
     alignItems: "center",
     marginRight: wp("4%"),
   },

@@ -63,7 +63,7 @@ const RatePopUp = ({
               "Rating: 4/5",
               "Rating: 5/5",
             ]}
-            defaultRating={3}
+            defaultRating={0}
             count={5}
             starImage={{
               uri: "https://www.psd-dude.com/tutorials/resources-images/star-symbol/star-png.png",

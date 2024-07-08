@@ -74,9 +74,7 @@ const MovieDetails = ({ route, navigation }) => {
   const handleRatingSubmit = (rating) => {
     setUserRate(rating);
     setIsRatePopUpVisible(false);
-    setLocalVoteCount(
-      movie.userRating === 0 ? localVoteCount + 1 : localVoteCount
-    );
+    setLocalVoteCount(userRate === 0 ? localVoteCount + 1 : localVoteCount);
     let oldRatingSum =
       movie.rating * movie.voteCount -
       (movie.userRating === 0 ? 0 : movie.userRating);
@@ -206,8 +204,8 @@ const MovieDetails = ({ route, navigation }) => {
               {userRate !== 0
                 ? userRate
                 : movie.userRating !== 0
-                  ? movie.userRating / 2
-                  : "(?)"}
+                ? movie.userRating / 2
+                : "(?)"}
             </Text>
           }
         </View>

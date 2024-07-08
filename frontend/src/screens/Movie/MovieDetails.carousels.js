@@ -107,6 +107,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: wp("3%"),
   },
   actorContainer: {
+    width: wp("23%"),
     alignItems: "center",
     marginRight: wp("4%"),
   },

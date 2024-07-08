@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   View,
   Text,
@@ -8,7 +8,9 @@ import {
   TouchableOpacity,
   Linking,
   Share,
+  Button,
 } from "react-native";
+import YoutubeIframe from "react-native-youtube-iframe";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -35,6 +37,19 @@ const MovieDetails = ({ route, navigation }) => {
   const [changedRate, setChangedRate] = useState(0);
 
   const { movie, isLoading } = useFetchMovieDetails(movieId, userId);
+
+  const [playing, setPlaying] = useState(false);
+
+  const onStateChange = useCallback((state) => {
+    if (state === "ended") {
+      setPlaying(false);
+      Alert.alert("video has finished playing!");
+    }
+  }, []);
+
+  const togglePlaying = useCallback(() => {
+    setPlaying((prev) => !prev);
+  }, []);
 
   useEffect(() => {
     if (movie) {
@@ -130,20 +145,13 @@ const MovieDetails = ({ route, navigation }) => {
 
       {/* POSTER AND TRAILER BTN PLAY */}
       <View style={styles.posterContainer}>
-        <FastImage
-          source={{ uri: thumbnailURL }}
-          alt={movie.title}
-          style={styles.poster}
-          resizeMode="cover"
+        <YoutubeIframe
+          height={wp("56.25%")}
+          width={wp("100%")}
+          play={playing}
+          videoId={youtubeVideoId}
+          onChangeState={onStateChange}
         />
-        <TouchableOpacity onPress={handlePlayTrailer} style={styles.playButton}>
-          <Ionicons
-            name="play"
-            size={hp("14%")}
-            color="#DADADA"
-            style={styles.playIcon}
-          />
-        </TouchableOpacity>
       </View>
 
       {/* SYNOPSIS */}

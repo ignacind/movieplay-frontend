@@ -1,83 +1,82 @@
-import React, { useEffect } from 'react';
-import { View, Text, Image, StyleSheet, Pressable } from 'react-native';
+import React, { useEffect } from "react";
+import { View, Text, Image, StyleSheet, Pressable } from "react-native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
-} from 'react-native-responsive-screen';
-import FastImage from 'react-native-fast-image';
-import RatingStarsInRow from '../../components/RatingStarsInRow';
-import { useNavigation } from '@react-navigation/native';
-import BookmarkButton from '../../components/BookmarkButton';
-import { genreMap_EN_ES as genreMap } from './genreMap';
+} from "react-native-responsive-screen";
+import FastImage from "react-native-fast-image";
+import RatingStarsInRow from "../../components/RatingStarsInRow";
+import { useNavigation } from "@react-navigation/native";
+import BookmarkButton from "../../components/BookmarkButton";
+import { genreMap_EN_ES as genreMap } from "./genreMap";
 
 const SearchMovieCard = React.memo(({ movie }) => {
-  
   const navigation = useNavigation();
 
-  const genresList = movie.genres.map(genre => {
+  const genresList = movie.genres.map((genre) => {
     return <GenreCard genre={genreMap[genre.name]} key={genre.genreId} />;
   });
 
   const rate = (movie.rating / 2).toFixed(2);
 
   const handlePosterPress = () => {
-    navigation.navigate('MovieDetails', { movie });
+    navigation.navigate("MovieDetails", { movie });
   };
 
   return (
     <View style={styles.container}>
-      
       <Pressable // Navigate to MovieDetails
-      style={styles.poster.container} 
-      onPress={handlePosterPress}>
-
+        style={styles.poster.container}
+        onPress={handlePosterPress}
+      >
         <FastImage
           source={{ uri: movie.posterImageLink }}
           style={styles.poster.image}
           resizeMode="cover"
         />
-
       </Pressable>
 
       <View style={styles.body.container}>
-        <Text style={styles.body.title}>{movie.title}</Text>
+        <Pressable // Navigate to MovieDetails
+          onPress={handlePosterPress}
+        >
+          <Text style={styles.body.title}>{movie.title}</Text>
+        </Pressable>
         <View style={styles.body.rating.container}>
-
-          <RatingStarsInRow 
-            rate={movie.rating} 
-            width={styles.body.ratingStar.width} 
+          <RatingStarsInRow
+            rate={movie.rating}
+            width={styles.body.ratingStar.width}
             height={styles.body.ratingStar.height}
             style={styles.body.ratingStar}
-            />
+          />
           <Text style={styles.body.rating.text}>{rate}</Text>
         </View>
         <View style={styles.body.genre}>
           {genresList < 3 ? genresList : genresList.slice(0, 3)}
         </View>
         <View style={styles.body.favorite}>
-          <BookmarkButton movie={movie}/>
+          <BookmarkButton movie={movie} />
         </View>
       </View>
     </View>
   );
 });
 
-
 const styles = StyleSheet.create({
   container: {
-    width: wp('100%'),
-    height: hp('20%'),
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-    marginVertical: hp('1%'),
+    width: wp("100%"),
+    height: hp("20%"),
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+    marginVertical: hp("1%"),
   },
   poster: {
     container: {
-      width: wp('25%'),
-      height: hp('20%'),
+      width: wp("25%"),
+      height: hp("20%"),
       borderRadius: 15,
-      shadowColor: '#000',
+      shadowColor: "#000",
       shadowOffset: {
         width: 0,
         height: 2,
@@ -87,8 +86,8 @@ const styles = StyleSheet.create({
       elevation: 7,
     },
     image: {
-      width: '100%',
-      height: '100%',
+      width: "100%",
+      height: "100%",
       borderRadius: 15,
       elevation: 7,
     },
@@ -96,52 +95,52 @@ const styles = StyleSheet.create({
 
   body: {
     container: {
-      width: wp('65%'),
-      height: hp('20%'),
-      justifyContent: 'space-around',
-      marginLeft: wp('4%'),
+      width: wp("65%"),
+      height: hp("20%"),
+      justifyContent: "space-around",
+      marginLeft: wp("4%"),
     },
     title: {
-      color: '#FAFAFA',
-      fontSize: hp('2.5%'),
-      fontWeight: 'bold',
+      color: "#FAFAFA",
+      fontSize: hp("2.5%"),
+      fontWeight: "bold",
     },
     rating: {
       container: {
-        flexDirection: 'row',
-        alignItems: 'center',
+        flexDirection: "row",
+        alignItems: "center",
       },
       text: {
-        color: '#FDFDFD',
-        fontSize: hp('2.1%'),
-        marginLeft: wp('1%'),
+        color: "#FDFDFD",
+        fontSize: hp("2.1%"),
+        marginLeft: wp("1%"),
       },
     },
     ratingStar: {
-      width: wp('5%'),
-      height: hp('4%'),
-      marginRight: wp('1%'),
+      width: wp("5%"),
+      height: hp("4%"),
+      marginRight: wp("1%"),
     },
 
     genre: {
-      flexDirection: 'row',
+      flexDirection: "row",
       container: {
-        marginRight: wp('4%'),
-        marginBottom: hp('1%'),
+        marginRight: wp("4%"),
+        marginBottom: hp("1%"),
         borderRadius: 5,
         borderWidth: 1,
-        borderColor: '#DADADA',
+        borderColor: "#DADADA",
         padding: 2,
       },
       text: {
-        color: '#FAFAFA',
-        fontSize: hp('1.5%'),
+        color: "#FAFAFA",
+        fontSize: hp("1.5%"),
       },
     },
-    
+
     favorite: {
-      width: wp('5%'),
-      alignItems: 'start',
+      width: wp("5%"),
+      alignItems: "start",
     },
   },
 });

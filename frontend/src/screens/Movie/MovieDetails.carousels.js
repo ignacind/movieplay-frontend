@@ -36,7 +36,9 @@ export const CastCarousel = ({ cast, directors }) => {
             style={styles.actorImage}
             resizeMode="cover"
           />
-          <Text style={styles.actorName}>{item.name}</Text>
+          <Text style={styles.actorName} numberOfLines={3}>
+            {item.name}
+          </Text>
         </View>
       )}
     />

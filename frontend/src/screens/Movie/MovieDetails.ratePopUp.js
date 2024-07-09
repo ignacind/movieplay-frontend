@@ -8,15 +8,9 @@ import {
 import Ionicons from "react-native-vector-icons/Ionicons";
 import movieService from "../../services/moviesService";
 
-const RatePopUp = ({
-  visible,
-  onClose,
-  onSubmit,
-  movieTitle,
-  movieId,
-  userId,
-}) => {
+const RatePopUp = ({ visible, onClose, onSubmit, movieTitle, movieId, userId,}) => {
   const [rating, setRating] = useState(0);
+
 
   const handleRatingCompleted = (rating) => {
     setRating(rating);
@@ -27,6 +21,7 @@ const RatePopUp = ({
     try {
       await movieService.rateMovie(movieId, userId, rating * 2);
       onSubmit(rating);
+
     } catch (error) {
       console.error(error);
     }

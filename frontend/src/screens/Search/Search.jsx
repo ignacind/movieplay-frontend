@@ -24,6 +24,7 @@ export default function Search({ navigation }) {
   const inputRef = useRef();
   const userId = useSelector((state) => state.user.userId);
   const favorites = useSelector((state) => state.favorites.favorites);
+  const ratings = useSelector(state => state.user.ratings)
 
   const {
     movieData,
@@ -77,9 +78,8 @@ export default function Search({ navigation }) {
           data={movieData}
           renderItem={({ item }) => (
             <SearchMovieCard
-              key={`movie-${item.movieId}-${item.isFavorite}-${
-                favorites[item.movieId]
-              }-${item.rating}`}
+              key={`movie-${item.movieId}-${item.isFavorite}-
+              ${favorites[item.movieId]}-${ratings[item.movieId]}-${item.rating}`}
               movie={item}
             />
           )}

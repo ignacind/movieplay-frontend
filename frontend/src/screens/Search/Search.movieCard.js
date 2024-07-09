@@ -9,9 +9,11 @@ import RatingStarsInRow from "../../components/RatingStarsInRow";
 import { useNavigation } from "@react-navigation/native";
 import BookmarkButton from "../../components/BookmarkButton";
 import { genreMap_EN_ES as genreMap } from "./genreMap";
+import { useSelector } from "react-redux";
 
 const SearchMovieCard = React.memo(({ movie }) => {
   const navigation = useNavigation();
+  const ratings = useSelector(state => state.user.ratings);
 
   const genresList = movie.genres.map((genre) => {
     return <GenreCard genre={genreMap[genre.name]} key={genre.genreId} />;
@@ -44,12 +46,12 @@ const SearchMovieCard = React.memo(({ movie }) => {
         </Pressable>
         <View style={styles.body.rating.container}>
           <RatingStarsInRow
-            rate={movie.rating}
+            rate={ratings[movie.movieId] ? ratings[movie.movieId] * 2 : movie.rating}
             width={styles.body.ratingStar.width}
             height={styles.body.ratingStar.height}
             style={styles.body.ratingStar}
           />
-          <Text style={styles.body.rating.text}>{rate}</Text>
+          <Text style={styles.body.rating.text}>{ratings[movie.movieId] ? ratings[movie.movieId] : rate}</Text>
         </View>
         <View style={styles.body.genre}>
           {genresList < 3 ? genresList : genresList.slice(0, 3)}

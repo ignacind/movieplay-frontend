@@ -1,5 +1,7 @@
 // src/services/storageService.js
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import store from "../redux/store";
+import { updateTokens } from "../redux/slices/authSlice";
 
 const TOKEN_KEY = "accessToken";
 const REFRESH_TOKEN_KEY = "refreshToken";
@@ -8,6 +10,7 @@ const saveTokens = async (accessToken, refreshToken) => {
   try {
     await AsyncStorage.setItem(TOKEN_KEY, accessToken);
     await AsyncStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+    store.dispatch(updateTokens({ accessToken, refreshToken }));
   } catch (e) {
     console.error("Failed to save tokens to AsyncStorage", e);
   }

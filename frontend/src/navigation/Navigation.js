@@ -8,7 +8,7 @@ import { AuthStack, MainStack } from "./Stack";
 import useLogin from "../hooks/useLogin";
 
 const Navigation = () => {
-  const { handleAutoLogin } = useLogin();
+  const { isLoading, handleAutoLogin } = useLogin();
   const [isLogged, setIsLogged] = useState(undefined);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const error = useSelector((state) => state.error.error);
@@ -21,11 +21,15 @@ const Navigation = () => {
     checkLogin();
   }, []);
 
+  if (isLoading) {
+    return <LoadingPage />;
+  }
+
 
   return (
     <View style={styles.container}>
       <NavigationContainer>
-        {isAuthenticated ? <MainStack /> : <AuthStack />}
+        {isAuthenticated && !isLoading ? <MainStack /> : <AuthStack />}
         {error && (
           <ErrorScreen
             message={error?.message}

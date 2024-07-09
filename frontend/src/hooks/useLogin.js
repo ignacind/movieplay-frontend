@@ -2,19 +2,22 @@
 import { useDispatch } from 'react-redux';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import authService from '../services/authService';
-import { setUserId, clearUserId } from '../redux/slices/userSlice';
-import { getTokens, getUserId } from "../services/storageService";
-import { login, logout } from "../redux/slices/authSlice";
+import { login } from '../redux/slices/authSlice';
+import { setUserId } from '../redux/slices/userSlice';
 import { saveTokens, saveUserId } from '../services/storageService';
 import { GOOGLE_CLIENT_ID } from '@env';
 import useFetchFavorites from './useFetchFavorites';
+import { useState } from 'react';
+import { getUserId, getTokens } from '../services/storageService';
+import { logout } from '../redux/slices/authSlice';
+import { clearUserId } from '../redux/slices/userSlice';
 
-const useLogin = () => {
+const useGoogleLogin = () => {
   const dispatch = useDispatch();
   const { fetchFavorites } = useFetchFavorites();
+  const [isLoading, setIsLoading] = useState(false);
 
   const onGoogleButtonPress = async () => {
-    console.log('WHAT IS A POLAR BEAR DOIN IN ARLIGNTON TEXAS')
     try {
       GoogleSignin.configure({
         webClientId: `${GOOGLE_CLIENT_ID}.apps.googleusercontent.com`,
@@ -23,7 +26,19 @@ const useLogin = () => {
       const { user } = await GoogleSignin.signIn();
       const response = await authService.signIn(user.email, user.name, user.photo);
 
-      await updateLocalCredentials(response);
+      dispatch(setUserId(response.userId));
+
+      dispatch(login({
+        accessToken: response.accessToken,
+        refreshToken: response.refreshToken
+      }));
+
+      await saveTokens(response.accessToken, response.refreshToken);
+      await saveUserId(response.userId);
+      await fetchFavorites(response.userId);
+
+      console.log("CURRENT ID: ", response.userId);
+
 
     } catch (error) {
       console.log(error);
@@ -50,6 +65,7 @@ const useLogin = () => {
   };
 
   const handleAutoLogin = async () => {
+    setIsLoading(true);
     const { accessToken, refreshToken } = await getTokens();
     const userId = await getUserId();
     const isLogged = !!(accessToken && refreshToken && userId);
@@ -60,11 +76,12 @@ const useLogin = () => {
       dispatch(logout());
       dispatch(clearUserId());
     }
+    setIsLoading(false);
     return isLogged;
   };
 
 
-  return { onGoogleButtonPress, handleAutoLogin };
+  return { isLoading, onGoogleButtonPress, handleAutoLogin };
 };
 
-export default useLogin;
+export default useGoogleLogin;

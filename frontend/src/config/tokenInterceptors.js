@@ -1,6 +1,7 @@
 import store from '../redux/store';
 import authService from '../services/authService';
 import {api, apiWithFormData} from './apiConfig';
+import { saveTokens } from '../services/storageService';
 
 const requestInterceptor = config => {
   const state = store.getState();
@@ -15,34 +16,30 @@ const requestInterceptor = config => {
 
 const responseInterceptor = async error => {
   const originalRequest = error.config;
-  
+
   if (error.response && (error.response.status === 403 && !originalRequest._retry)) {
     originalRequest._retry = true;
 
     try {
+
       const state = store.getState();
-      const refreshToken = state.auth.refreshToken;
+      const UserRefreshToken = state.auth.refreshToken;
       const userId = state.user.userId;
       const oldAccessToken = state.auth.accessToken;
 
-      if (!userId || !oldAccessToken || !refreshToken) {
+      if (!userId || !oldAccessToken || !UserRefreshToken) {
         throw new Error('Missing userId, oldAccessToken, or refreshToken');
       }
 
       const response = await authService.refreshToken(
         userId,
         oldAccessToken,
-        refreshToken,
+        UserRefreshToken,
       );
 
-      const newAccessToken = response.data.accessToken;
+      const newAccessToken = response.accessToken;
 
-      store.dispatch(
-        refreshToken({
-          accessToken: newAccessToken,
-          refreshToken: refreshToken,
-        }),
-      );
+      await saveTokens(newAccessToken, UserRefreshToken);
 
       originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
 

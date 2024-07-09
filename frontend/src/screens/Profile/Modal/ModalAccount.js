@@ -17,7 +17,6 @@ import { useDispatch } from "react-redux";
 import { logout } from "../../../redux/slices/authSlice";
 import authService from "../../../services/authService";
 import store from "../../../redux/store";
-import { clearUser } from "../../../redux/slices/userSlice";
 import { removeTokens } from "../../../services/storageService";
 import { GOOGLE_CLIENT_ID } from "@env";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
@@ -70,11 +69,13 @@ export default function ModalAccount({
 
       await GoogleSignin.revokeAccess();
       await GoogleSignin.signOut();
-      dispatch(logout(userId));
-      // dispatch(clearUser());
       await removeTokens();
+      dispatch(logout(userId));
       setModalVisible(false);
-    } catch (error) {}
+      
+    } catch (error) {
+      console.error(error);
+    }
   };
   return (
     <Modal

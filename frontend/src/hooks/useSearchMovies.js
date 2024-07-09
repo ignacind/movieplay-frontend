@@ -16,7 +16,7 @@ const useSearchMovies = (
   const [page, setPage] = useState(0);
   const [previousInput, setPreviousInput] = useState("");
 
-  const amountOfMoviesToGet = 8;
+  const AMOUNT_MOVIES_TO_GET = 8;
 
   const filterGenres = (movies, selectedGenres) => {
     if (selectedGenres.length === 0) {
@@ -48,7 +48,7 @@ const useSearchMovies = (
         selectedOrderASC ? "ASC" : "DESC",
         orderBy,
         newSearch ? 0 : page,
-        amountOfMoviesToGet,
+        AMOUNT_MOVIES_TO_GET,
         userId
       );
 
@@ -58,7 +58,7 @@ const useSearchMovies = (
           newSearch ? filteredMovies : [...movieData, ...filteredMovies]
         );
         setPage(newSearch ? 1 : page + 1);
-        setHasMore(response.movies.length > 0);
+        setHasMore(response.movies.length === 8);
       } else {
         setHasMore(false);
       }

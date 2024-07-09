@@ -1,5 +1,5 @@
 import {api, endpoints} from '../config/apiConfig';
-
+import { removeTokens, removeUserId } from './storageService';
 const authService = {
   signIn: async (email, realName, photo) => {
     try {

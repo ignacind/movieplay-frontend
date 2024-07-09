@@ -19,6 +19,7 @@ const useGoogleLogin = () => {
 
   const onGoogleButtonPress = async () => {
     try {
+      setIsLoading(true);
       GoogleSignin.configure({
         webClientId: `${GOOGLE_CLIENT_ID}.apps.googleusercontent.com`,
       });
@@ -32,7 +33,7 @@ const useGoogleLogin = () => {
         accessToken: response.accessToken,
         refreshToken: response.refreshToken
       }));
-
+     
       await saveTokens(response.accessToken, response.refreshToken);
       await saveUserId(response.userId);
       await fetchFavorites(response.userId);
@@ -42,6 +43,8 @@ const useGoogleLogin = () => {
 
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -65,19 +68,21 @@ const useGoogleLogin = () => {
   };
 
   const handleAutoLogin = async () => {
-    setIsLoading(true);
-    const { accessToken, refreshToken } = await getTokens();
-    const userId = await getUserId();
-    const isLogged = !!(accessToken && refreshToken && userId);
+    await onGoogleButtonPress();
+    return true;
+    // setIsLoading(true);
+    // const { accessToken, refreshToken } = await getTokens();
+    // const userId = await getUserId();
+    // const isLogged = !!(accessToken && refreshToken && userId);
 
-    if (isLogged) {
-      await updateLocalCredentials({ accessToken, refreshToken, userId }, true);
-    } else {
-      dispatch(logout());
-      dispatch(clearUserId());
-    }
-    setIsLoading(false);
-    return isLogged;
+    // if (isLogged) {
+    //   await updateLocalCredentials({ accessToken, refreshToken, userId }, true);
+    // } else {
+    //   dispatch(logout());
+    //   dispatch(clearUserId());
+    // }
+    // setIsLoading(false);
+    // return isLogged;
   };
 
 

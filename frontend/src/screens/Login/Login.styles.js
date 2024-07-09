@@ -51,6 +51,13 @@ export const styles = StyleSheet.create({
       width: wp('58%'),
       height: hp('7.5%'),
     },
+
+    loadingSignIn: {
+      marginVertical: hp('3.75%'),
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+
     textButton: {
       marginLeft: wp('3%'),
       color: 'black',

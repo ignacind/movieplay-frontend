@@ -21,10 +21,6 @@ const Navigation = () => {
     checkLogin();
   }, []);
 
-  if (isLoading) {
-    return <LoadingPage />;
-  }
-
 
   return (
     <View style={styles.container}>

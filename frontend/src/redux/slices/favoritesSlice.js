@@ -1,13 +1,13 @@
 // src/store/favoritesSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 
-const FAVORITES_LIMIT = 25;
 
 const favoritesSlice = createSlice({
   name: 'favorites',
   initialState: {
     favorites: {},
-    amountFavorites: 0
+    amountFavorites: 0,
+    FAVORITES_LIMIT: 30
   },
   reducers: {
     changeStateFavorite: (state, action) => {

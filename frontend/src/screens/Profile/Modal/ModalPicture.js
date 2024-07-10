@@ -87,6 +87,7 @@ const styles = StyleSheet.create({
   cancelButton: {
     backgroundColor: '#D9D9D9',
     marginRight: 'auto',
+    width: wp('22%'),
   },
   buttonText: {
     color: '#000',

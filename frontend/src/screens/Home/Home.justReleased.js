@@ -6,7 +6,7 @@ import LoadingPage from '../../components/LoadingPage';
 import { useNavigation } from '@react-navigation/native';
 import { styles } from './Home.styles';
 
-const JustReleased = ({ FlatListHeader }) => {
+const JustReleased = ({ FlatListHeader, flatListRef, handleScroll }) => {
   const navigation = useNavigation();
   const { moviesReleasedList, loading, hasMore, handleLoadMore, fetchJustReleased } = useFetchJustReleased();
 
@@ -51,6 +51,9 @@ const JustReleased = ({ FlatListHeader }) => {
         columnWrapperStyle={{ justifyContent: 'center', alignItems: 'center' }}
         removeClippedSubviews={true}
         initialNumToRender={6}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+        ref={flatListRef}
       />
     </View>
   );

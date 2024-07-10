@@ -1,5 +1,4 @@
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 export const styles =  StyleSheet.create({
@@ -45,5 +44,18 @@ export const styles =  StyleSheet.create({
         borderRadius: 6,
         elevation: 5,
         marginHorizontal: wp('4.5%'),
+      },
+
+      scrollToTopButton: {
+        position: 'absolute',
+        bottom: 20,
+        right: 20,
+        backgroundColor: '#A0153E',
+        borderRadius: 50,
+        padding: wp('3%'),
+        elevation: 5,
+        zIndex: 1000,
+        borderWidth: 2,
+        borderColor: '#D51D53',
       },
 });

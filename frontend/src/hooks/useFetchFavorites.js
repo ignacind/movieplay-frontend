@@ -5,14 +5,14 @@ import { addInitialResponseListToFavorites } from "../redux/slices/favoritesSlic
 
 const useFetchFavorites = () => {
     const dispatch = useDispatch();
-    const favorites = useSelector(state => state.favorites.favorites)
+    const FAVORITES_LIMIT = useSelector(state => state.favorites.FAVORITES_LIMIT)
     const [isLoading, setIsLoading] = useState(false);
 
     const fetchFavorites = async (userId) => {
         setIsLoading(true);
 
         try {
-            const response = await userService.getUserFavorites(userId, 0, 8);
+            const response = await userService.getUserFavorites(userId, 0, FAVORITES_LIMIT);
             
             if (response && response.movies) {
                 dispatch(addInitialResponseListToFavorites(response.movies))

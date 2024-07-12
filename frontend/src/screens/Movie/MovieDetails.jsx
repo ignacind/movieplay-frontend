@@ -46,7 +46,6 @@ const MovieDetails = ({ route, navigation }) => {
   const onStateChange = useCallback((state) => {
     if (state === "ended") {
       setPlaying(false);
-      Alert.alert("video has finished playing!");
     }
   }, []);
 
@@ -75,8 +74,6 @@ const MovieDetails = ({ route, navigation }) => {
     ""
   );
 
-  let thumbnailURL = "https://img.youtube.com/vi/" + youtubeVideoId + "/0.jpg";
-
   const toggleSynopsis = () => {
     setIsSynopsisExpanded(!isSynopsisExpanded);
   };
@@ -96,9 +93,9 @@ const MovieDetails = ({ route, navigation }) => {
     let oldRatingSum =
       movie.rating * movie.voteCount -
       (movie.userRating === 0 ? 0 : movie.userRating);
-    let newRate = (((oldRatingSum + rating * 2) / localVoteCount) / 2).toFixed(2);
+    let newRate = ((oldRatingSum + rating * 2) / localVoteCount / 2).toFixed(2);
     setChangedRate(newRate);
-    dispatch(addRating({ rating: newRate, movieId: movieId }))
+    dispatch(addRating({ rating: newRate, movieId: movieId }));
   };
 
   const handleSynopsisLayout = (event) => {
@@ -216,8 +213,8 @@ const MovieDetails = ({ route, navigation }) => {
               {userRate !== 0
                 ? userRate
                 : movie.userRating !== 0
-                  ? movie.userRating / 2
-                  : "(?)"}
+                ? movie.userRating / 2
+                : "(?)"}
             </Text>
           }
         </View>

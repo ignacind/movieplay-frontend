@@ -27,19 +27,7 @@ const useGoogleLogin = () => {
       const { user } = await GoogleSignin.signIn();
       const response = await authService.signIn(user.email, user.name, user.photo);
 
-      dispatch(setUserId(response.userId));
-
-      dispatch(login({
-        accessToken: response.accessToken,
-        refreshToken: response.refreshToken
-      }));
-     
-      await saveTokens(response.accessToken, response.refreshToken);
-      await saveUserId(response.userId);
-      await fetchFavorites(response.userId);
-
-      console.log("CURRENT ID: ", response.userId);
-
+      await updateLocalCredentials(response);
 
     } catch (error) {
       console.log(error);
@@ -68,21 +56,19 @@ const useGoogleLogin = () => {
   };
 
   const handleAutoLogin = async () => {
-    await onGoogleButtonPress();
-    return true;
-    // setIsLoading(true);
-    // const { accessToken, refreshToken } = await getTokens();
-    // const userId = await getUserId();
-    // const isLogged = !!(accessToken && refreshToken && userId);
+    setIsLoading(true);
+    const { accessToken, refreshToken } = await getTokens();
+    const userId = await getUserId();
+    const isLogged = !!(accessToken && refreshToken && userId);
 
-    // if (isLogged) {
-    //   await updateLocalCredentials({ accessToken, refreshToken, userId }, true);
-    // } else {
-    //   dispatch(logout());
-    //   dispatch(clearUserId());
-    // }
-    // setIsLoading(false);
-    // return isLogged;
+    if (isLogged) {
+      await updateLocalCredentials({ accessToken, refreshToken, userId }, true);
+    } else {
+      dispatch(logout());
+      dispatch(clearUserId());
+    }
+    setIsLoading(false);
+    return isLogged;
   };
 
 

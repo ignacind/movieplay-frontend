@@ -11,11 +11,11 @@ const internetRequestInterceptor = async config => {
 };
 
 const internetResponseErrorInterceptor = error => {
+
   if (!error.response) {
     store.dispatch(showError({
       message: 'No hay conexión a internet',
       iconName: 'cloud-offline-outline',
-      retryAction: 'retryRequest',
       retryConfig: error.config,
     }));
   }
@@ -27,7 +27,6 @@ const serverErrorInterceptor = (error) => {
     store.dispatch(showError({
       message: 'Error en el servidor',
       iconName: 'planet-outline',
-      retryAction: 'retryRequest',
       retryConfig: error.config,
     }));
   }

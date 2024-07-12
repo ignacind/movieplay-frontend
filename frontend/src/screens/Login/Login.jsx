@@ -1,5 +1,5 @@
 // src/screens/Login/Login.js
-import React from 'react';
+import React, { useEffect } from 'react';
 import { TouchableOpacity, Text, View, ActivityIndicator } from 'react-native';
 import Logo from '../../assets/images/logo.svg';
 import GoogleLogo from '../../assets/images/login_btnGoogle.svg';
@@ -8,8 +8,17 @@ import useLogin from '../../hooks/useLogin';
 import LoadingPage from '../../components/LoadingPage';
 
 export default function Login({ }) {
-  const { isLoading, onGoogleButtonPress } = useLogin();
+  const { isLoading, onGoogleButtonPress, handleAutoLogin } = useLogin();
 
+  useEffect(() => {
+    const checkLogin = async () => {
+      const result = await handleAutoLogin();
+    };
+    checkLogin();
+  }, []);
+
+
+  console.log("Is AUTO LOGIN?? " + isLoading)
   return (
     <View style={styles.container}>
       <View style={styles.rectangleContainer}>

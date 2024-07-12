@@ -6,13 +6,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { hideError } from '../../redux/slices/errorSlice';
 import useReloadError from '../../hooks/useReloadError';
 
-const ErrorScreen = ({ message, onRetry, iconName }) => {
+const ErrorScreen = ({  }) => {
   const dispatch = useDispatch();
   const error = useSelector((state) => state.error.error);
   const {isLoading, retryRequest} = useReloadError();
   
   const handleRetry = async () => {
-    if (error && error.retryAction && error.retryConfig) {
+
+    if (error && error.retryConfig) {
         await retryRequest(error)
     }
 
@@ -31,8 +32,8 @@ const ErrorScreen = ({ message, onRetry, iconName }) => {
         <Ionicons name="close-circle" size={hp('5%')} color="#D51D53" />
       </TouchableOpacity>}
 
-      <Ionicons name={iconName} size={hp('25%')} color="#D51D53" />
-      <Text style={styles.errorText}>{message}</Text>
+      <Ionicons name={error.iconName} size={hp('25%')} color="#D51D53" />
+      <Text style={styles.errorText}>{error.message}</Text>
       
       {isLoading 
       ? <ActivityIndicator size={'medium'} color={'#D51D53'} />

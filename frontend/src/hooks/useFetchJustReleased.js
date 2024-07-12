@@ -11,7 +11,6 @@ const useFetchJustReleased = (userId) => {
 
     const fetchJustReleased = useCallback(async () => {
         if (!hasMore) return;
-        console.log("fetching page home", page);
         try {
             setLoading(true);
             const response = await movieService.getJustReleased(page, 8);

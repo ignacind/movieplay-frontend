@@ -33,15 +33,14 @@ export const styles = StyleSheet.create({
     marginRight: wp("1.5%"),
   },
   noSearchContainer: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: hp('25%'),
   },
   noSearchText: {
-    color: "#FAFAFA",
-    fontSize: hp("2.5%"),
-    fontWeight: "bold",
-    paddingBottom: 25,
+    color: 'white',
+    fontSize: wp('6%'),
+    marginBottom: hp('.5%'),
   },
   noResultsContainer: {
     flex: 1,

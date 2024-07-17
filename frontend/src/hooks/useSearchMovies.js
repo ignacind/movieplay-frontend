@@ -18,14 +18,6 @@ const useSearchMovies = (
 
   const AMOUNT_MOVIES_TO_GET = 8;
 
-  const filterGenres = (movies, selectedGenres) => {
-    if (selectedGenres.length === 0) {
-      return movies;
-    }
-    return movies.filter((movie) =>
-      movie.genres.some((genre) => selectedGenres.includes(genre.name))
-    );
-  };
 
   const handleSearch = async (newSearch = false) => {
     let textInputValue = searchInput;
@@ -35,30 +27,27 @@ const useSearchMovies = (
 
     setPreviousInput(searchInput);
 
-    const orderBy = orderByMethod || "DATE";
-    setPage(newSearch ? 0 : page);
-    let currentPage = newSearch ? 0 : page;
+    const orderBy = orderByMethod || "releaseDate";
+
     setIsLoading(true);
     setFirstSearch(newSearch);
     setSearchAttempted(true);
-    console.log("searching page: ", currentPage)
+    console.log("searching page: ", page)
     try {
       const response = await movieService.searchMovies(
         textInputValue.trimStart(),
         selectedOrderASC ? "ASC" : "DESC",
         orderBy,
-        newSearch ? 0 : currentPage,
+        newSearch ? 0 : page,
         AMOUNT_MOVIES_TO_GET,
-        userId
+        userId,
+        selectedGenres.map(genre => `&genreName=${genre}`).join('')
       );
-      console.log("amount of movies: ", response.movies ?  response.movies.length : null)
+
       if (response && response.movies) {
-        const filteredMovies = filterGenres(response.movies, selectedGenres);
-        setMovieData(
-          newSearch ? filteredMovies : [...movieData, ...filteredMovies]
-        );
-        setPage(currentPage + 1);
-        setHasMore(response.movies.length > 0);
+        setMovieData(newSearch ? response.movies : [...movieData, ...response.movies]);
+        setPage(newSearch ? 1 : page + 1);
+        setHasMore(response.movies.length === AMOUNT_MOVIES_TO_GET);
       } else {
         setHasMore(false);
       }
@@ -66,14 +55,14 @@ const useSearchMovies = (
       console.error("Error fetching movies: ", error);
       setHasMore(false);
     } finally {
-      setIsLoading(false);
+          setIsLoading(false);
     }
 
     setFirstSearch(false);
   };
 
   const handleLoadMore = () => {
-    if (hasMore) {
+    if (!isLoading && hasMore) {
       handleSearch(false);
     }
   };

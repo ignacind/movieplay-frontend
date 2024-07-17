@@ -33,8 +33,8 @@ const FilterPopup = ({
 
 
   const orderOptions = [
-    {label: 'Año de publicación', value: 'DATE'},
-    {label: 'Calificación', value: 'RATING'},
+    {label: 'Año de publicación', value: 'releaseDate'},
+    {label: 'Calificación', value: 'rating'},
   ];
 
   const toggleGenre = genre => {

@@ -4,8 +4,8 @@ import {setupTokenInterceptors} from './tokenInterceptors';
 import {setupErrorsInterceptors} from './ErrorInterceptors';
 
 
-// const API_BASE_URL = API_BASE_URL_LOCAL;
-const API_BASE_URL = API_BASE_URL_DEV;
+const API_BASE_URL = API_BASE_URL_LOCAL;
+// const API_BASE_URL = API_BASE_URL_DEV;
 
 const API_VERSION = '/api/v1';
 
@@ -42,8 +42,8 @@ const endpoints = {
   movie: {
     getMoviesForHomepage: () => `${API_VERSION}/movies/`,
     getMovieById: (movieId, userId) => `${API_VERSION}/movies/${movieId}?userId=${userId}`,
-    searchMovies: (input, page, size, sort, orderBy, userId) =>
-      `${API_VERSION}/movies/search?input=${input}&page=${page}&size=${size}&sort=${sort}&orderBy=${orderBy}&userId=${userId}`,
+    searchMovies: (input, page, size, sort, orderBy, userId, genresNames) =>
+      `${API_VERSION}/movies/search?input=${input}&page=${page}&size=${size}&sort=${orderBy+','+sort}&userId=${userId}${genresNames}`,
     getNewReleases: (page, size) => `${API_VERSION}/movies/new?page=${page}&size=${size}`,
     rateMovie: (movieId, userId) => `${API_VERSION}/movies/${movieId}/rate/${userId}`,
   },

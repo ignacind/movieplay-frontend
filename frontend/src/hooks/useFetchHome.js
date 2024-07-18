@@ -1,11 +1,10 @@
 import { useState, useCallback, useEffect } from "react";
-import useRetryCustomFetch from "./useRetryCustomFetch";
 import movieService from "../services/moviesService";
+import useInternetConnection from "./useInternetConnection";
 
 const useFetchHome = (userId) => {
     const [moviesMap, setMoviesMap] = useState({});
     const [loading, setLoading] = useState(true);
-    const [retryCount, setRetryCount] = useState(0);
 
     const fetchHomeData = useCallback(async () => {
         setLoading(true);
@@ -13,11 +12,11 @@ const useFetchHome = (userId) => {
             const response = await movieService.getHomeData();
             setMoviesMap(response);
             setLoading(false);
-            setRetryCount(0);
+
         } catch (error) {
             console.log(error);
+        } finally {
             setLoading(false);
-            setRetryCount((prev) => prev + 1);
         }
     }, [userId]);
 
@@ -27,8 +26,7 @@ const useFetchHome = (userId) => {
         fetchHomeData();
     }, [userId, fetchHomeData]);
 
-
-    useRetryCustomFetch({ retryCount, customFetchData: fetchHomeData });
+    useInternetConnection(fetchHomeData);
 
     return { moviesMap, loading };
 }

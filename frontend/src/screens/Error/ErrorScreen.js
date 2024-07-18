@@ -9,15 +9,15 @@ import useReloadError from '../../hooks/useReloadError';
 const ErrorScreen = ({  }) => {
   const dispatch = useDispatch();
   const error = useSelector((state) => state.error.error);
-  const {isLoading, retryRequest} = useReloadError();
   
-  const handleRetry = async () => {
-
-    if (error && error.retryConfig) {
-        await retryRequest(error)
-    }
-
-  };
+  // const {isLoading, retryRequest} = useReloadError();
+  
+  // Not used 
+  // const handleRetry = async () => {
+  //   if (error && error.retryConfig) {
+  //       await retryRequest(error)
+  //   }
+  // };
 
   const handleClose = () => {
     dispatch(hideError());
@@ -28,20 +28,20 @@ const ErrorScreen = ({  }) => {
   return (
     <View style={styles.container}>
 
-      {!isLoading && <TouchableOpacity style={styles.closeBtn} onPress={handleClose}>
+      {<TouchableOpacity style={styles.closeBtn} onPress={handleClose}>
         <Ionicons name="close-circle" size={hp('5%')} color="#D51D53" />
       </TouchableOpacity>}
 
       <Ionicons name={error.iconName} size={hp('25%')} color="#D51D53" />
       <Text style={styles.errorText}>{error.message}</Text>
       
-      {isLoading 
+      {/* {isLoading 
       ? <ActivityIndicator size={'medium'} color={'#D51D53'} />
       :
       <TouchableOpacity style={styles.btn} onPress={handleRetry}>
         <Ionicons name="reload-sharp" size={hp('3%')} color="#050505" />
         <Text style={styles.textBtn}>Reintentar</Text>
-      </TouchableOpacity>}
+      </TouchableOpacity>} */}
       {/* <TouchableOpacity style={styles.btn} onPress={handleClose}>
         <Ionicons name="close-circle-outline" size={hp('3%')} color="#050505" />
         <Text style={styles.textBtn}>Cerrar</Text>

@@ -1,8 +1,8 @@
 import { useState, useCallback, useEffect } from "react";
-import useRetryCustomFetch from "./useRetryCustomFetch";
 import movieService from "../services/moviesService";
+import useInternetConnection from "./useInternetConnection";
 
-const useFetchJustReleased = (userId) => {
+const useFetchJustReleased = () => {
     const [loading, setLoading] = useState(true);
     const [moviesReleasedList, setMoviesReleasedList] = useState([]);
     const [page, setPage] = useState(1);
@@ -28,11 +28,12 @@ const useFetchJustReleased = (userId) => {
         }
     }, [page, hasMore]);
 
+    useInternetConnection(fetchJustReleased, hasMore);
 
     const handleLoadMore = () => {
         if (hasMore && !loading) {
             fetchJustReleased();
-        }
+        } 
     };
 
     return {  moviesReleasedList, loading, hasMore, handleLoadMore, fetchJustReleased };

@@ -1,12 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
-import useRetryCustomFetch from "./useRetryCustomFetch";
 import movieService from "../services/moviesService";
-
+import useInternetConnection from "./useInternetConnection";
 
 const useFetchMovieDetails = (movieId, userId) => {
     const [movie, setMovie] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [retryCount, setRetryCount] = useState(0);
 
     const fetchMovieData = useCallback(async () => {
         setLoading(true);
@@ -17,8 +15,8 @@ const useFetchMovieDetails = (movieId, userId) => {
             setRetryCount(0);
         } catch (error) {
             console.log(error);
+        }  finally {
             setLoading(false);
-            setRetryCount((prev) => prev + 1);
         }
     }, [movieId]);
 
@@ -28,7 +26,7 @@ const useFetchMovieDetails = (movieId, userId) => {
     }, [movieId, fetchMovieData]);
     
 
-    useRetryCustomFetch({ retryCount, customFetchData: fetchMovieData });
+    useInternetConnection(fetchMovieData);
 
 
     return { movie, loading };

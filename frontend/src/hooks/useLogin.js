@@ -2,7 +2,7 @@
 import { useDispatch } from 'react-redux';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import authService from '../services/authService';
-import { login } from '../redux/slices/authSlice';
+import { login, updateTokens } from '../redux/slices/authSlice';
 import { setUserId } from '../redux/slices/userSlice';
 import { saveTokens, saveUserId } from '../services/storageService';
 import { GOOGLE_CLIENT_ID } from '@env';
@@ -38,9 +38,11 @@ const useGoogleLogin = () => {
 
 
   const updateLocalCredentials = async (response, alreadyLogged = false) => {
+
+    try {
     dispatch(setUserId(response.userId));
 
-    dispatch(login({
+    dispatch(updateTokens({
       accessToken: response.accessToken,
       refreshToken: response.refreshToken
     }));
@@ -52,23 +54,39 @@ const useGoogleLogin = () => {
 
     await fetchFavorites(response.userId);
 
+    dispatch(login());
     console.log("CURRENT ID: ", response.userId);
+    } catch (error) {
+      throw error;
+    }
   };
 
   const handleAutoLogin = async () => {
-    setIsLoading(true);
-    const { accessToken, refreshToken } = await getTokens();
-    const userId = await getUserId();
-    const isLogged = !!(accessToken && refreshToken && userId);
 
-    if (isLogged) {
-      await updateLocalCredentials({ accessToken, refreshToken, userId }, true);
-    } else {
-      dispatch(logout());
-      dispatch(clearUserId());
+    try {
+      setIsLoading(true);
+      const { accessToken, refreshToken } = await getTokens();
+      const userId = await getUserId();
+      const isLogged = !!(accessToken && refreshToken && userId);
+
+      if (isLogged) {
+        await updateLocalCredentials({ accessToken, refreshToken, userId }, true);
+      } else {
+        dispatch(logout());
+        dispatch(clearUserId());
+      }
+      return isLogged;
+  } catch (error) {
+    // When the app is opened in 2 devices and the user logs out in one of them
+    // the tokens get revoked and there isnt any way to check if the token is revoked
+    // so you cant really auto login the user then.
+    // This is why we catch the error and check if the error is a 404 and then we call the google login
+    if (error.response && error.response.status === 404) {
+      await onGoogleButtonPress();
+    } 
+  } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
-    return isLogged;
   };
 
 

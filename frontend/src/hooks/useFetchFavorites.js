@@ -10,21 +10,16 @@ const useFetchFavorites = () => {
 
     const fetchFavorites = async (userId) => {
         setIsLoading(true);
-
-        try {
-            const response = await userService.getUserFavorites(userId, 0, FAVORITES_LIMIT);
-            
-            if (response && response.movies) {
-                dispatch(addInitialResponseListToFavorites(response.movies))
-            } 
-        } catch (error) {
-            console.error("Error fetching favorites", error);
-        } finally {
-            setIsLoading(false);
-        }
+        const response = await userService.getUserFavorites(userId, 0, FAVORITES_LIMIT);
+        
+        if (response && response.movies) {
+            dispatch(addInitialResponseListToFavorites(response.movies))
+        } 
+    } 
+        
 
         
-    }
+    
 
 
     return { isLoading, fetchFavorites };

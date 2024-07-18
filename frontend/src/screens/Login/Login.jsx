@@ -18,7 +18,6 @@ export default function Login({ }) {
   }, []);
 
 
-  console.log("Is AUTO LOGIN?? " + isLoading)
   return (
     <View style={styles.container}>
       <View style={styles.rectangleContainer}>

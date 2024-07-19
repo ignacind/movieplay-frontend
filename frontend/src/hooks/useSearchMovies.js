@@ -1,5 +1,6 @@
 import { useState } from "react";
 import movieService from "../services/moviesService";
+import useInternetConnection from "./useInternetConnection";
 
 const useSearchMovies = (
   searchInput,
@@ -32,7 +33,7 @@ const useSearchMovies = (
     setIsLoading(true);
     setFirstSearch(newSearch);
     setSearchAttempted(true);
-    console.log("searching page: ", page)
+
     try {
       const response = await movieService.searchMovies(
         textInputValue.trimStart(),
@@ -60,6 +61,8 @@ const useSearchMovies = (
 
     setFirstSearch(false);
   };
+
+  useInternetConnection(handleSearch, hasMore);
 
   const handleLoadMore = () => {
     if (!isLoading && hasMore) {

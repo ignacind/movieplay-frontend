@@ -55,7 +55,7 @@ const useGoogleLogin = () => {
     await fetchFavorites(response.userId);
 
     dispatch(login());
-    console.log("CURRENT ID: ", response.userId);
+    // console.log("CURRENT ID: ", response.userId);
     } catch (error) {
       throw error;
     }

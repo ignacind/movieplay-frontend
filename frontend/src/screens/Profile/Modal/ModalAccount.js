@@ -4,8 +4,6 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  Image,
-  TextInput,
   Modal,
   ActivityIndicator,
 } from "react-native";
@@ -20,6 +18,7 @@ import store from "../../../redux/store";
 import { removeTokens } from "../../../services/storageService";
 import { GOOGLE_CLIENT_ID } from "@env";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import { deleteFavorites } from "../../../redux/slices/favoritesSlice";
 
 export default function ModalAccount({
   modalVisible,
@@ -71,6 +70,7 @@ export default function ModalAccount({
       await GoogleSignin.signOut();
       await removeTokens();
       dispatch(logout(userId));
+      dispatch(deleteFavorites());
       setModalVisible(false);
       
     } catch (error) {

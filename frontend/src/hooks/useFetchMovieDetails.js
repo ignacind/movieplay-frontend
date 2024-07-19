@@ -12,7 +12,6 @@ const useFetchMovieDetails = (movieId, userId) => {
             const response = await movieService.getMovieById(movieId, userId);
             setMovie(response);
             setLoading(false);
-            setRetryCount(0);
         } catch (error) {
             console.log(error);
         }  finally {

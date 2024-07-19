@@ -29,11 +29,15 @@ const favoritesSlice = createSlice({
         state.favorites[movie.movieId] = movie;
       });
       state.amountFavorites += action.payload.length;
-    }
+    },
+
+    deleteFavorites: (state) => {
+      state.favorites = {};
+      state.amountFavorites = 0;
   }
 
-})
+}})
 
-export const { changeStateFavorite, addInitialResponseListToFavorites } = favoritesSlice.actions;
+export const { changeStateFavorite, addInitialResponseListToFavorites, deleteFavorites } = favoritesSlice.actions;
 export default favoritesSlice.reducer;
 
